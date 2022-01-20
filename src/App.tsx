@@ -1,25 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import TrangChu from './pages/trangchu/TrangChu';
+import QuanLyVe from './pages/quanlyve/QuanLyVe';
+import HomeTemPlate from './template/homeTemplate/HomeTemPlate';
+import CaiDat from './pages/caidat/CaiDat';
+import DoiSoatVe from './pages/doisoatve/DoiSoatVe';
+import { Router, Switch } from "react-router-dom";
+import history from './util/history';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router history={history}>
+      <Switch>
+        <HomeTemPlate title='Thống kê' exact path='/' Component={TrangChu}></HomeTemPlate>
+        <HomeTemPlate title='Thống kê' exact path='/trangchu' Component={TrangChu}></HomeTemPlate>
+        <HomeTemPlate title='Danh Sách gói vé' exact path='/caidat' Component={CaiDat}></HomeTemPlate>
+        <HomeTemPlate title='Danh sách vé' exact path='/quanlyve' Component={QuanLyVe}></HomeTemPlate>
+        <HomeTemPlate title='Đối soát vé' exact path='/doisoatve' Component={DoiSoatVe}></HomeTemPlate>
+      </Switch>
+
+    </Router>
   );
 }
 

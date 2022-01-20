@@ -1,0 +1,83 @@
+/* custom slider*/
+#myNavBar .ant-menu-title-content{
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 26px;
+
+}
+
+#myNavBar .ant-layout-sider , #myNavBar .ant-layout-header,
+#myNavBar .ant-menu.ant-menu-dark,#myNavBar .ant-menu-dark .ant-menu-inline.ant-menu-sub{
+    background: #F9F6F4;
+  
+}
+#myNavBar{
+    /* border-radius: 24px; */
+    padding: 17px 33px;
+    background-color: #F9F6F4;
+    position: relative;
+}
+#myNavBar .ant-menu-dark .ant-menu-item, #myNavBar .ant-menu-dark .ant-menu-submenu-title{
+    color: #1E0D03
+}
+#myNavBar .ant-menu-submenu-arrow{
+    display: none;
+}
+#myNavBar .ant-layout-sider{
+    height: 100vh;
+    margin-right: 33px;
+    
+}
+#myNavBar .ant-menu-inline .ant-menu-item{
+    padding: 15px, 16px, 15px, 24px;
+    border-radius: 8px;
+    
+}
+
+/* active nav-item  */
+#myNavBar .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected{
+    background-color: #FFB800;
+}
+#myNavBar .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected i{
+    color: white;
+}
+
+
+/* input search  */
+.input-group{
+    display: flex;
+    align-items: center;
+    height: 48px;
+    width: 470px;
+    padding: 10px 16px 10px 16px;
+    border-radius: 12px;
+    background: #EDEDED;
+}
+.input-control{
+    width: 394px;
+    height: 28px;
+    background: #EDEDED;
+}
+input.input-control:focus{
+    outline: none;
+}
+.icon-control.anticon{
+   color: #1E0D03;
+   margin-left: 1rem;
+}
+.icon-control.anticon svg{
+    height: 24px;
+    width: 24px;
+}
+
+/* Content */
+.title{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 36px;
+    line-height: 54px;
+    display: flex;
+    align-items: center;
+    color: #1E0D03;
+}

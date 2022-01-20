@@ -3,10 +3,18 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux'
+import { applyMiddleware, createStore } from 'redux'
+import rootReducer from './redux/configStore';
+import thunk from 'redux-thunk';
+import 'antd/dist/antd.css';
+const store = createStore(rootReducer, applyMiddleware(thunk))
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

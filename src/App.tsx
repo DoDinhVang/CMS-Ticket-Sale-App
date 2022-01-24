@@ -6,6 +6,14 @@ import CaiDat from './pages/caidat/CaiDat';
 import DoiSoatVe from './pages/doisoatve/DoiSoatVe';
 import { Router, Switch } from "react-router-dom";
 import history from './util/history';
+import { db } from './firebase/firebase';
+import { baseService } from './service/BaseService';
+// const getlst = async ()=>{
+
+//     const data = await baseService.get('danhSachVe')
+//     await console.log(data)
+// }
+// getlst()
 
 function App() {
   return (

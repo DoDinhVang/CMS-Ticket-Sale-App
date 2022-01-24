@@ -3,147 +3,97 @@ import InputSearch from '../../component/InputSearch';
 import { Table, Tag, Space } from 'antd';
 import {FilterOutlined}from '@ant-design/icons'
 import './quanLyVe.css'
-
+import { useEffect, useState} from 'react';
+import {useSelector,useDispatch} from 'react-redux'
+import { LayDanhSachVeActionCreator } from '../../redux/action-creator/danhSachVeActionCreator';
+import { State } from '../../redux/configStore';
 export default function QuanLyVe() {
+
+    const {danhSachVe} = useSelector( (state:State) => state.danhSachVeReducer);
+    const dispatch =  useDispatch();
+    const [style, setStyle] = useState({
+            goiGiaDinh: 'loaigoi_active',
+            goiSuKien: ''
+    })
+    const lst = danhSachVe.map((ve:any,index: number)=>{
+        return {...ve, key: index}
+    })
+
+
+    useEffect(()=>{
+        dispatch(LayDanhSachVeActionCreator())
+    },[])
 
     const columns = [
         {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-            render: (text: any) => <a>{text}</a>,
+            title: 'bookingCode',
+            dataIndex: 'bookingCode',
+            key: 'booKingCode',
+           
         },
         {
-            title: 'Age',
-            dataIndex: 'age',
-            key: 'age',
+            title: 'Số Vé',
+            dataIndex: 'soVe',
+            key: 'soVe'
         },
         {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
+            title: 'Tên sự kiện',
+            dataIndex: 'tenSuKien',
+            key: 'tenSuKien'
         },
         {
-            title: 'Tags',
-            key: 'tags',
-            dataIndex: 'tags',
-            render: (tags: any) => (
-                <span>
-                    {tags.map((tag: any) => {
-                        let color = tag.length > 5 ? 'geekblue' : 'green';
-                        if (tag === 'loser') {
-                            color = 'volcano';
-                        }
-                        return (
-                            <Tag color={color} key={tag}>
-                                {tag.toUpperCase()}
-                            </Tag>
-                        );
-                    })}
-                </span>
-            ),
+            title: 'Tình Trạng sử dụng',
+            dataIndex:'tinhTrangSuDung',
+            key: 'tinhTrangSuDung',
+            render: (text:boolean, record: any)=>{
+                if(text){
+                    return <Tag color='green'>Đã Sử Dụng</Tag>
+                }
+                return <Tag color='red'>Chưa sử dụng</Tag>
+            }
         },
         {
-            title: 'Action',
-            key: 'action',
-            render: (text: any, record: any) => (
-                <Space size="middle">
-                    <a>Invite {record.name}</a>
-                    <a>Delete</a>
-                </Space>
-            ),
+            title: 'Ngày áp dụng',
+            dataIndex: 'ngayApDung',
+            key: 'ngayApDung'
+
+        },
+        {
+            title: 'Ngày hết hạn',
+            dataIndex: 'ngayHetHan',
+            key: 'ngayHetHan'
+
+        },
+      
+        {
+            title: 'Cổng check-in',
+            dataIndex: 'congCheckIn',
+            key: 'congCheckIn',
+            
+          
         },
     ];
-    const data = [
-        {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-        },
-        {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-        },
-        {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-        },
-        {
-            key: '4',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-        },
-        {
-            key: '5',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-        },
-        {
-            key: '6',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-        },
-        {
-            key: '7',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-        },
-        {
-            key: '8',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-        },
-        {
-            key: '9',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-        },
-        {
-            key: '10',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-        },
-        {
-            key: '11',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-        },
-        {
-            key: '12',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-        },
-    ];
+    
+    const data =  lst;
     return (
         <div id = 'quanLyVe'>
-            {/* input search  */}
+            {/* div:  loại gói  */}
+            <div className='flex loaigoi'>
+                <p onClick = {()=>{
+                    setStyle({
+                        goiGiaDinh: 'loaigoi_active',
+                        goiSuKien: ''
+                    })
+                }} className= {`mr-8 ${style.goiGiaDinh}`}>Gói gia đình</p>
+                <p onClick={()=>{
+                     setStyle({
+                        goiGiaDinh: '',
+                        goiSuKien: 'loaigoi_active'
+                    })
+                }} className= {style.goiSuKien}>Gói Sự kiện</p>
+            </div>
 
+            {/* input search  */}
             <div className='flex justify-between items-center'>
                 <InputSearch placeholder='Tìm bằng số vé'></InputSearch>
                 <div className='flex justify-between items-center'>

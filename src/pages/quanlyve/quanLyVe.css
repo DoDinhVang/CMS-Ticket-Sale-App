@@ -54,3 +54,8 @@
 .loaigoi .loaigoi_active::before{
     background-color: #FF993C ;
 }
+
+/* custom table  */
+.ant-table-thead  tr  .ant-table-cell {
+    font-weight: 600;
+}

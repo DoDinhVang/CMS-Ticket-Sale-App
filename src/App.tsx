@@ -6,18 +6,13 @@ import CaiDat from './pages/caidat/CaiDat';
 import DoiSoatVe from './pages/doisoatve/DoiSoatVe';
 import { Router, Switch } from "react-router-dom";
 import history from './util/history';
-import { db } from './firebase/firebase';
-import { baseService } from './service/BaseService';
-// const getlst = async ()=>{
+import ModalFilterTicket from './component/modal/ModalFilterTicket';
 
-//     const data = await baseService.get('danhSachVe')
-//     await console.log(data)
-// }
-// getlst()
 
 function App() {
   return (
     <Router history={history}>
+      <ModalFilterTicket/>
       <Switch>
         <HomeTemPlate title='Thống kê' exact path='/' Component={TrangChu}></HomeTemPlate>
         <HomeTemPlate title='Thống kê' exact path='/trangchu' Component={TrangChu}></HomeTemPlate>

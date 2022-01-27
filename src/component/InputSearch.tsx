@@ -1,11 +1,18 @@
 import React from 'react';
 import { SearchOutlined } from '@ant-design/icons'
-export default function InputSearch(props:any) {
+import { useDispatch } from 'react-redux';
+import { searchByTicketNumberActionCreator } from '../redux/action-creator/danhSachVeActionCreator';
+export default function InputSearch(props: any) {
 
-
-    const {placeholder} = props
+    const dispatch = useDispatch()
+    const { placeholder } = props
     return <div className='input-group flex'>
-        <input  className='input-control italic' placeholder= {placeholder}></input>
+        <input className='input-control italic' placeholder={placeholder} onChange={(e) => {
+
+            dispatch(searchByTicketNumberActionCreator(e.target.value))
+
+
+        }}></input>
         <SearchOutlined className='icon-control' />
     </div>
 }

@@ -1,0 +1,31 @@
+/* custiom modal antd */
+.ant-modal .ant-modal-content{
+    /* border-bottom: none; */
+    border-radius: 16px;
+}
+.ant-modal-content .ant-modal-header{
+    border-top-right-radius: 16px;
+    border-top-left-radius: 16px;
+}
+.ant-modal-footer{
+    display: none;
+}
+.ant-modal-header .ant-modal-title{
+    text-align: center;
+    font-size: 24px;
+    line-height: 30px;
+    color: #1E0D03;
+    font-weight: bold;
+}
+
+.ant-picker .anticon{
+    color:  #FF993C;
+}
+
+.modal_ticket_content .text-title{
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 26px;
+    color: #1E0D03;
+    opacity: 0.8;
+}

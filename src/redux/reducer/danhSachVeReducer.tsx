@@ -1,14 +1,15 @@
 import { Action } from "../action/danhSachVeAction";
+import { TicketListType } from "../types/danhSachVeType";
 const initialState = {
-  danhSachVe: []
+  ticketList: []
 
 };
 
 const danhSachVeReducer = (state = initialState, action:Action) => {
   switch (action.type) {
-    case 'LAY_DANH_SACH_VE':
-      return { ...state, danhSachVe: action.danhSachVe};
-
+    case TicketListType.GET_TICKET_LIST:
+      return { ...state, ticketList: action.ticketList};
+   
     default:
       return {...state};
   }

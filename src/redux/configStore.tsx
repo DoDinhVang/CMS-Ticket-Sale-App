@@ -1,7 +1,9 @@
 import {combineReducers} from 'redux'
 import danhSachVeReducer from './reducer/danhSachVeReducer'
+import modalFilterTicketReducer from './reducer/ModalFilterTicketReducer'
 const rootReducer = combineReducers({
-    danhSachVeReducer
+    danhSachVeReducer,
+    modalFilterTicketReducer
 })
 
 export default rootReducer

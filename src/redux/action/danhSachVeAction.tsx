@@ -1,8 +1,11 @@
-import { DanhSachVeType } from "../types/danhSachVeType";
+import { TicketListType } from "../types/danhSachVeType";
 
-interface LayDanhSachVe{
-    type: DanhSachVeType,
-    danhSachVe: any
+
+interface GetTicketListAction{
+    type: TicketListType,
+    ticketList: any
 }
 
-export type Action = LayDanhSachVe
+
+
+export type Action = GetTicketListAction

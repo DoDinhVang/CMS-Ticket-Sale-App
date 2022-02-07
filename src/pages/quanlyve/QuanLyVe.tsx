@@ -1,24 +1,24 @@
 import React from 'react'
 import InputSearch from '../../component/InputSearch';
-import { Table, Tag, Space } from 'antd';
+import { Table, Tag} from 'antd';
 import { FilterOutlined } from '@ant-design/icons'
 import './quanLyVe.css'
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { getTicketListActionCreator } from '../../redux/action-creator/danhSachVeActionCreator';
+import { getTicketListActionCreator } from '../../redux/action-creator/quanLyVeActionCreator';
 import { State } from '../../redux/configStore';
 import moment from 'moment';
 import { CHUA_SU_DUNG, DA_SU_DUNG, HET_HAN } from '../../util/config';
 import { modalVisibleActionCreator } from '../../redux/action-creator/modalFilterTicketActionCreator';
 export default function QuanLyVe() {
 
-    const { ticketList } = useSelector((state: State) => state.danhSachVeReducer);
+    const { ticketList } = useSelector((state: State) => state.quanLyVeReducer);
     const dispatch = useDispatch();
     const [style, setStyle] = useState({
         goiGiaDinh: 'loaigoi_active',
         goiSuKien: ''
     })
-    
+
 
     const [maGoi, setMaGoi] = useState('goiGiaDinh')
     const lst = ticketList.map((ve: any, index: number) => {
@@ -29,6 +29,7 @@ export default function QuanLyVe() {
 
     useEffect(() => {
         dispatch(getTicketListActionCreator())
+       
     }, [])
 
     const columns = [
@@ -100,6 +101,7 @@ export default function QuanLyVe() {
     const data = lst;
     return (
         <div id='quanLyVe'>
+            { console.log('hello')}
             {/* div:  loại gói  */}
             <div className='flex loaigoi'>
                 <p onClick={() => {

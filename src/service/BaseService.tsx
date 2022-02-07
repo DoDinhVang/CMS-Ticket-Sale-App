@@ -1,5 +1,5 @@
 import { db } from "../firebase/firebase";
-
+import { FilterTicket } from "../model/quanlyve/FilterTicket";
 export class BaseService {
 
     get(collectionName: string) {
@@ -19,10 +19,10 @@ export class BaseService {
 
 
     searchByTicketNumber(collectionName: string, soVe: string) {
-        if(soVe === ''){
+        if (soVe === '') {
             return this.get(collectionName)
         }
-        return db.collection(collectionName).where("soVe", "==", soVe).get()
+        return db.collection(collectionName).where("soVe", ">=", soVe).where('soVe', "<=", soVe + '\uf8ff').get()
             .then((data) => {
                 const lst: any = [];
                 data.forEach((doc: any) => {
@@ -35,8 +35,32 @@ export class BaseService {
             });
     }
 
-    filterTicKet(){
-        
+    filterTicKet(collectionName: string, values: FilterTicket) {
+
+        if (values.ticketStatus === '') {
+            return db.collection(collectionName).where("congCheckInId", "in", values.checkInGateId).get()
+                .then((data) => {
+                    const lst: any = [];
+                    data.forEach((doc: any) => {
+                        lst.push(doc.data())
+                    })
+                    return lst
+                })
+                .catch((error) => {
+                    console.log("Error getting documents: ", error);
+                });
+        }
+        return db.collection(collectionName).where("congCheckInId", "in", values.checkInGateId).where('tinhTrangSuDung', '==', values.ticketStatus).get()
+            .then((data) => {
+                const lst: any = [];
+                data.forEach((doc: any) => {
+                    lst.push(doc.data())
+                })
+                return lst
+            })
+            .catch((error) => {
+                console.log("Error getting documents: ", error);
+            });
     }
 
 }

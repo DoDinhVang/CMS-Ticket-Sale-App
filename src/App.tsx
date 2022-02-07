@@ -7,11 +7,15 @@ import DoiSoatVe from './pages/doisoatve/DoiSoatVe';
 import { Router, Switch } from "react-router-dom";
 import history from './util/history';
 import ModalFilterTicket from './component/modal/ModalFilterTicket';
+import Loading from './component/loading/Loading';
 
 
 function App() {
+
+
   return (
     <Router history={history}>
+      <Loading></Loading>
       <ModalFilterTicket/>
       <Switch>
         <HomeTemPlate title='Thống kê' exact path='/' Component={TrangChu}></HomeTemPlate>

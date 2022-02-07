@@ -1,9 +1,12 @@
 import {combineReducers} from 'redux'
-import danhSachVeReducer from './reducer/danhSachVeReducer'
-import modalFilterTicketReducer from './reducer/ModalFilterTicketReducer'
+import loadingReducer from './reducer/loadingReducer'
+import quanLyVeReducer from './reducer/quanLyVeReducer'
+import modalFilterTicketReducer from './reducer/modalFilterTicketReducer'
 const rootReducer = combineReducers({
-    danhSachVeReducer,
-    modalFilterTicketReducer
+    loadingReducer,
+    quanLyVeReducer,
+    modalFilterTicketReducer,
+
 })
 
 export default rootReducer

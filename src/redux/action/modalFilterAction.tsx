@@ -3,7 +3,9 @@ import { ModalFilterTicketType } from "../types/modalFilterTicketType";
 
 interface ModalVisibleAction{
     type: ModalFilterTicketType
-    modalVisible: boolean
+    payload: boolean
 }
 
-export type Action = ModalVisibleAction
+
+
+export type ModalFilterTicketAction = ModalVisibleAction 

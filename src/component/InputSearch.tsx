@@ -1,7 +1,7 @@
 import React from 'react';
 import { SearchOutlined } from '@ant-design/icons'
 import { useDispatch } from 'react-redux';
-import { searchByTicketNumberActionCreator } from '../redux/action-creator/danhSachVeActionCreator';
+import { searchByTicketNumberActionCreator } from '../redux/action-creator/quanLyVeActionCreator';
 export default function InputSearch(props: any) {
 
     const dispatch = useDispatch()

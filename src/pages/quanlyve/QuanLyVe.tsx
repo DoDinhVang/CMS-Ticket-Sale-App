@@ -1,6 +1,6 @@
 import React from 'react'
 import InputSearch from '../../component/InputSearch';
-import { Table, Tag} from 'antd';
+import { Table, Tag } from 'antd';
 import { FilterOutlined } from '@ant-design/icons'
 import './quanLyVe.css'
 import { useEffect, useState } from 'react';
@@ -21,18 +21,24 @@ export default function QuanLyVe() {
 
 
     const [maGoi, setMaGoi] = useState('goiGiaDinh')
-    const lst = ticketList.map((ve: any, index: number) => {
+
+    const lst = ticketList.filter((ve: any) => ve.maGoi === maGoi).map((ve: any, index: number) => {
         return { ...ve, key: index }
-    }).filter((ve: any) => ve.maGoi === maGoi)
+    })
 
     console.log('lst', lst)
 
     useEffect(() => {
         dispatch(getTicketListActionCreator())
-       
+
     }, [])
 
     const columns = [
+        {
+            title: 'STT',
+            dataIndex: 'key',
+            key: 'stt'
+        },
         {
             title: 'Booking Code',
             dataIndex: 'bookingCode',
@@ -101,7 +107,7 @@ export default function QuanLyVe() {
     const data = lst;
     return (
         <div id='quanLyVe'>
-            { console.log('hello')}
+            <h1 className='font-black text-4xl mb-6' style={{ lineHeight: "54px", color: "#1E0D03" }}>Quản lý vé</h1>
             {/* div:  loại gói  */}
             <div className='flex loaigoi'>
                 <p onClick={() => {
@@ -120,15 +126,15 @@ export default function QuanLyVe() {
                 }} className={style.goiSuKien}>Gói Sự kiện</p>
             </div>
 
-          
+
             <div className='flex justify-between items-center'>
-                  {/* input search  */}
+                {/* input search  */}
                 <InputSearch placeholder='Tìm bằng số vé'></InputSearch>
 
 
                 {/* filter ticket  and export file  */}
                 <div className='flex justify-between items-center'>
-                    <div className='filter__ticket' onClick={()=>{
+                    <div className='filter__ticket' onClick={() => {
                         dispatch(modalVisibleActionCreator(true))
                     }}>
                         <FilterOutlined />
@@ -144,7 +150,7 @@ export default function QuanLyVe() {
             {/* danh sách vé  */}
 
             <div>
-                <Table style={{ marginTop: '31px' }}
+                <Table style={{ marginTop: '24px' }}
                     columns={columns}
                     pagination={{ position: ['bottomCenter'] }}
                     dataSource={data}

@@ -13,13 +13,15 @@ type homTemplateProps = {
     Component: any,
     title: string,
     exact: any,
-    path: any
+    path: any,
+    background: string,
+    padding: string
 
 }
 
 
 export default function HomeTemPlate(props: homTemplateProps) {
-    const { Component, title, ...resParams } = props
+    const { Component,background,padding, ...resParams } = props
     useEffect(() => { 
         
     }, [])
@@ -59,14 +61,20 @@ export default function HomeTemPlate(props: homTemplateProps) {
                             }} icon={<i className="fa fa-money-check-alt"></i>}>
                                 Đổi soát vé
                             </Menu.Item>
-                            <SubMenu key="sub1" icon={<i className="fa fa-cog"></i>} title="Cài đặt">
-                                <Menu.Item key="item1" onClick={() => {
-                                    history.push('/caidat')
-                                }}>Gói dịch vụ</Menu.Item>
-                            </SubMenu>
+                            <Menu.Item key="4" onClick={() => {
+                                history.push('/caiDat')
+                            }} icon={<i className="fa fa-cog"></i>}>
+                               Cài đặt
+                            </Menu.Item>
+                            <Menu.Item style = {{marginLeft: '20px'}} key="5" onClick={() => {
+                                history.push('/caiDat')
+                            }}>
+                              Gói dịch vụ
+                            </Menu.Item>
+                           
                         </Menu>
                     </Sider>
-                    <Layout style={{ background: 'white' }}>
+                    <Layout style={{ background: background }}>
                         <Header className="site-layout-sub-header-background" style={{ padding: 0 }} >
                             <div className='flex justify-between' id='myHeader'>
                                 {/* input search */}
@@ -82,8 +90,8 @@ export default function HomeTemPlate(props: homTemplateProps) {
                             </div>
                         </Header>
                         <Content>
-                            <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-                                <h1 className='title'>{title}</h1>
+                            <div className="site-layout-background" style={{ padding: padding, minHeight: 360, background: background }}>
+                                
                                 <Component {...propRoute}></Component>
                             </div>
                         </Content>

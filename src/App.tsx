@@ -8,21 +8,30 @@ import { Router, Switch } from "react-router-dom";
 import history from './util/history';
 import ModalFilterTicket from './component/modal/ModalFilterTicket';
 import Loading from './component/loading/Loading';
+import { baseService } from './service/BaseService';
+import UpdateTicketPack from './pages/caidat/components/UpdateTicketPack';
 
 
 function App() {
 
+  const reader = async ()=>{
+    const sms = await baseService.get('CMS-TICKET-SALE-APP')
+    console.log('sms',sms)
+  }
+  reader()
+  
 
   return (
     <Router history={history}>
-      <Loading></Loading>
+      <Loading/>
       <ModalFilterTicket/>
+      <UpdateTicketPack/>
       <Switch>
-        <HomeTemPlate title='Thống kê' exact path='/' Component={TrangChu}></HomeTemPlate>
-        <HomeTemPlate title='Thống kê' exact path='/trangchu' Component={TrangChu}></HomeTemPlate>
-        <HomeTemPlate title='Danh Sách gói vé' exact path='/caidat' Component={CaiDat}></HomeTemPlate>
-        <HomeTemPlate title='Danh sách vé' exact path='/quanlyve' Component={QuanLyVe}></HomeTemPlate>
-        <HomeTemPlate title='Đối soát vé' exact path='/doisoatve' Component={DoiSoatVe}></HomeTemPlate>
+        <HomeTemPlate padding='24px' background='white' title='Thống kê' exact path='/' Component={TrangChu}></HomeTemPlate>
+        <HomeTemPlate padding='24px' background='white' title='Thống kê' exact path='/trangchu' Component={TrangChu}></HomeTemPlate>
+        <HomeTemPlate padding='24px' background='white' title='Danh Sách gói vé' exact path='/caidat' Component={CaiDat}></HomeTemPlate>
+        <HomeTemPlate padding='24px' background='white'title='Danh sách vé' exact path='/quanlyve' Component={QuanLyVe}></HomeTemPlate>
+        <HomeTemPlate padding='0' background='#F9F6F4' title='Đối soát vé' exact path='/doisoatve' Component={DoiSoatVe}></HomeTemPlate>
       </Switch>
 
     </Router>

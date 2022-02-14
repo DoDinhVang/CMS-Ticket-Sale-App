@@ -81,3 +81,6 @@ input.input-control:focus{
     align-items: center;
     color: #1E0D03;
 }
+.site-layout-background{
+    background-color: initial;
+}

@@ -24,7 +24,9 @@ export default function ModalFilterTicket() {
   })
   const initialValues: FilterTicket = {
     checkInGateId: plainOption,
-    ticketStatus: ''
+    ticketStatus: '',
+    checkTicket: '',
+    eventId: ''
   }
   const formik = useFormik({
     enableReinitialize: true,

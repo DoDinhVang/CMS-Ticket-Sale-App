@@ -5,4 +5,4 @@ interface GetEventListAction {
     payLoad: any
 }
 
-export type checkTicketAction = GetEventListAction
+export type CheckTicketAction = GetEventListAction

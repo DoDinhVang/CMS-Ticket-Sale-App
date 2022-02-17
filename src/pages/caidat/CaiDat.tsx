@@ -1,28 +1,29 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import InputSearch from '../../component/InputSearch'
-import { getTicketPackList, updateModalVisibleActionCreator } from '../../redux/action-creator/quanLyGoiVeActionCreator'
+import { getTicketPackListActionCreator, editModalVisibleActionCreator, getInfoTicketPackActionCreator } from '../../redux/action-creator/quanLyGoiVeActionCreator'
 import { State } from '../../redux/configStore'
 import { Table, Tag } from 'antd'
 import { FormOutlined } from '@ant-design/icons';
 import { TicketPack } from '../../model/quanlygoive/TicketPack'
 import moment from 'moment'
 
+
 export default function CaiDat() {
   const { ticketPackList} = useSelector((state: State) => state.ticketPackManagerReducer)
   const lst = ticketPackList.map((ticketPack: TicketPack, index: number) => {
-    return { ...ticketPack, stt: index }
+    return { ...ticketPack, key: index }
   })
   console.log('lst', lst)
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getTicketPackList())
+    dispatch(getTicketPackListActionCreator())
   }, [])
   const columns = [
     {
       title: 'STT',
-      dataIndex: 'stt',
-      key: 'stt'
+      dataIndex: 'key',
+      key: 'key'
 
     },
     {
@@ -40,6 +41,7 @@ export default function CaiDat() {
       dataIndex: 'ngayApDung',
       key: 'ngayApDung',
       render: (text: any) => {
+        console.log('text', text)
         return <span>{moment(text.toDate()).format('DD/MM/YYYY')}</span>
       }
     },
@@ -65,7 +67,7 @@ export default function CaiDat() {
       key: 'giaCombo',
       render: (text: any) => {
         return <>
-          {text ? <span>{`${text}/ 4 vé`}</span> : <span></span>}
+          {text ? <span>{`${text.giaVe}/ ${text.soVe}`}</span> : <span></span>}
         </>
 
       }
@@ -84,9 +86,12 @@ export default function CaiDat() {
     {
       title: '',
       key: 'capNhat',
-      render: () => {
-        return <div onClick={()=>{
-          dispatch(updateModalVisibleActionCreator(true))
+      render: (record: TicketPack) => {
+        console.log('record', record)
+        return <div  onClick={()=>{
+          
+          dispatch(editModalVisibleActionCreator(true))
+          dispatch(getInfoTicketPackActionCreator({...record, ngayApDung: moment(record.ngayApDung.toDate()).format(), ngayHetHan: moment(record.ngayHetHan.toDate()).format()}))
         }} className='flex items-center cursor-pointer'><FormOutlined style={{ color: '#FF993C' }} className='mr-2' /><span style={{ color: '#FF993C' }} className='whitespace-nowrap'>Cập nhật</span></div>
       }
     },
@@ -113,7 +118,7 @@ export default function CaiDat() {
         </div>
       </div>
       <div>
-        <Table className='mt-6 ' columns={columns} dataSource={data} pagination={{ position: ['bottomCenter'] }} />
+        <Table className='mt-6 'columns={columns} dataSource={data} pagination={{ position: ['bottomCenter'] }} />
       </div>
 
     </div>

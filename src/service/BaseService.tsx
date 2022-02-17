@@ -1,4 +1,5 @@
 import { db } from "../firebase/firebase";
+import { TicketPack } from "../model/quanlygoive/TicketPack";
 import { FilterTicket } from "../model/quanlyve/FilterTicket";
 export class BaseService {
 
@@ -90,6 +91,30 @@ export class BaseService {
         }
     }
 
+    updateTicketPack(collectionName: string, values: TicketPack) {
+        switch (values.maGoi) {
+            case 'goiGiaDinh':
+                return db.collection(collectionName).doc('06eWI5IXxxyfC4VdQwYH').update({
+                    tenSuKien: values.tenSuKien,
+                    maSuKien: values.maSuKien,
+                    giaVe: values.giaVe,
+                    giaCombo: values.giaCombo,
+                    trangThai: values.trangThai
+                })
+            case 'goiSuKien':
+                return db.collection(collectionName).doc('XNL1DzzywwSMMBfuamyN').update({
+                    tenSuKien: values.tenSuKien,
+                    maSuKien: values.maSuKien,
+                    giaVe: values.giaVe,
+                    giaCombo: values.giaCombo,
+                    trangThai: values.trangThai
+                })
+
+            default:
+                break;
+        }
+       
+    }
 
 
 }

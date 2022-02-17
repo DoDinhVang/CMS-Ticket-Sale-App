@@ -1,14 +1,12 @@
 import { Dispatch } from 'redux'
-import { TicketManagerAction } from '../action/quanLyVeAction'
-import { LoadingAction } from '../action/loadingAction'
 import { baseService } from '../../service/BaseService'
 import { TicketManagerType } from '../types/quanLyVeType'
 import { FilterTicket } from '../../model/quanlyve/FilterTicket'
 import { hideLoadingActionCreator, showLoadingActionCreator } from './loadingActionCreator'
 import { modalVisibleActionCreator } from './modalFilterTicketActionCreator'
-import { ModalFilterTicketAction } from '../action/modalFilterAction'
+
 export const getTicketListActionCreator = () => {
-    return async (dispatch: Dispatch<TicketManagerAction|LoadingAction>) => {
+    return async (dispatch: Dispatch) => {
 
         dispatch(showLoadingActionCreator())
         const data = await baseService.get('danhSachVe')
@@ -21,7 +19,7 @@ export const getTicketListActionCreator = () => {
     }
 }
 export const searchByTicketNumberActionCreator = (soVe: string) => {
-    return async (dispatch: Dispatch<TicketManagerAction>) => {
+    return async (dispatch: Dispatch) => {
         const data = await baseService.searchByTicketNumber('danhSachVe', soVe)
         dispatch({
             type: TicketManagerType.GET_TICKET_LIST,
@@ -31,7 +29,7 @@ export const searchByTicketNumberActionCreator = (soVe: string) => {
 }
 
 export const getCheckInGateListActionCreator = () => {
-    return async (dispatch: Dispatch<TicketManagerAction>) => {
+    return async (dispatch: Dispatch) => {
 
         const data = await baseService.get('congCheckIn')
         dispatch({
@@ -44,7 +42,7 @@ export const getCheckInGateListActionCreator = () => {
 
 export const filterTickerActionCreator = (values: FilterTicket) => {
 
-    return async (dispatch: Dispatch<TicketManagerAction | LoadingAction | ModalFilterTicketAction>) => {
+    return async (dispatch: Dispatch) => {
 
         dispatch(showLoadingActionCreator())
         try {

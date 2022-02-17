@@ -1,11 +1,11 @@
 
-import { checkTicketAction } from "../action/doiSoatVeAction"
+import { CheckTicketAction } from "../action/doiSoatVeAction"
 import { checkTicketType } from "../types/doiSoatVeType"
 
 const initialState = {
     eventList: []
 }
-const checkTicketReducer = (state = initialState, action: checkTicketAction) => {
+const checkTicketReducer = (state = initialState, action: CheckTicketAction) => {
     switch (action.type) {
 
         case checkTicketType.GET_EVENT_LIST:

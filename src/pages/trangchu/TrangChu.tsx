@@ -35,7 +35,7 @@ export default function TrangChu() {
     }, []);
 
     return (
-        <div>
+        <div id='tranChu'>
             <h2 className='font-semibold' style={{lineHeight: '28px', fontSize: '18px'}}>Doanh thu</h2>
              <Area {...config} />
         </div>

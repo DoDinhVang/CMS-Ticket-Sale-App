@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../../redux/configStore';
 import { modalVisibleActionCreator } from '../../redux/action-creator/modalFilterTicketActionCreator';
 import { DatePicker } from 'antd';
-import './modalFilterTicket.css'
 import { CHUA_SU_DUNG, DA_SU_DUNG, HET_HAN } from '../../util/config';
 import { filterTickerActionCreator, getCheckInGateListActionCreator } from '../../redux/action-creator/quanLyVeActionCreator';
 import { CheckInGate } from '../../model/quanlyve/CheckInGate';

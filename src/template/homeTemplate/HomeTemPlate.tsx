@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 import { Layout, Menu, Avatar, Input } from 'antd';
 import { MailOutlined, BellOutlined } from '@ant-design/icons';
-import './homeTemplateConfig.css'
 import history from '../../util/history';
 import InputSearch from '../../component/InputSearch';
 import { useEffect } from 'react';
@@ -82,7 +81,7 @@ export default function HomeTemPlate(props: homTemplateProps) {
 
                                 {/* intro */}
                                 <div className='flex items-center'>
-                                    <MailOutlined className='cursor-pointer' style={{ height: '7px', width: '20px' }} />
+                                    <MailOutlined className='cursor-pointer ' style={{ height: '7px', width: '20px' }} />
                                     <BellOutlined className='cursor-pointer' style={{ height: '7px', width: '20px', margin: "0 29px" }} />
                                     <Avatar className='cursor-pointer' style={{ backgroundColor: '#87d068' }} icon={<img className='rounded' style={{ height: '48px', width: '48px' }} src='https://picsum.photos/48/48' alt='avatar_img'></img>} />
                                 </div>

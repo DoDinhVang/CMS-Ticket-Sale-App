@@ -1,0 +1,24 @@
+@import '../Helpers/variables.scss';
+
+/* style : loai goi  */
+.loaigoi p {
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 24px;
+    transition: all .5s;
+}
+.loaigoi p::before{
+    content: '';
+    display: inline-block;
+    position: absolute;
+    width:  100%;
+    height: 3px;
+    bottom: 0;
+    transition: all .5s;
+}
+.loaigoi .loaigoi_active{
+    color: $color-orange-0;
+}
+.loaigoi .loaigoi_active::before{
+    background-color: $bg-orange-0 ;
+}

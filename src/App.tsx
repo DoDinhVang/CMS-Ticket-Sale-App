@@ -1,25 +1,22 @@
 import React from 'react';
+import  './App.scss'
 import TrangChu from './pages/trangchu/TrangChu';
 import QuanLyVe from './pages/quanlyve/QuanLyVe';
-import HomeTemPlate from './template/homeTemplate/HomeTemPlate';
-import CaiDat from './pages/caidat/CaiDat';
-import DoiSoatVe from './pages/doisoatve/DoiSoatVe';
-import { Router, Switch } from "react-router-dom";
-import history from './util/history';
-import ModalFilterTicket from './component/modal/ModalFilterTicket';
-import Loading from './component/loading/Loading';
-import { baseService } from './service/BaseService';
-import UpdateTicketPack from './pages/caidat/components/UpdateTicketPack';
-
+import HomeTemPlate from './template/homeTemplate/HomeTemPlate'
+import CaiDat from './pages/caidat/CaiDat'
+import DoiSoatVe from './pages/doisoatve/DoiSoatVe'
+import { Router, Switch } from "react-router-dom"
+import history from './util/history'
+import ModalFilterTicket from './component/modal/ModalFilterTicket'
+import Loading from './component/loading/Loading'
+import UpdateTicketPack from './pages/caidat/components/UpdateTicketPack'
+import '../src/sass/Base/customize.scss'
+import '../src/sass/Componens/button.scss'
+import '../src/sass/Layouts/quanLyVe.scss'
+import '../src/sass/Layouts/homeTemplate.scss'
 
 function App() {
 
-  const reader = async ()=>{
-    const sms = await baseService.get('CMS-TICKET-SALE-APP')
-    console.log('sms',sms)
-  }
-  reader()
-  
 
   return (
     <Router history={history}>

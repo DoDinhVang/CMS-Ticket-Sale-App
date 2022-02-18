@@ -98,7 +98,7 @@ export default function CaiDat() {
   ]
   const data = lst
   return (
-    <div>
+    <div id ='caiDat'>
 
       <div className='flex justify-between items-center'>
         {/* input search  */}
@@ -107,12 +107,12 @@ export default function CaiDat() {
 
         {/* filter ticket  and export file  */}
         <div className='flex justify-between items-center'>
-          <div className='export__file mr-3'>
+          <button className='button--white mr-3'>
             <span>Xuất file (.csv)</span>
-          </div>
+          </button>
 
 
-          <button className='py-3 px-3 rounded-lg text-white' style={{ background: '#FF993C' }}>Thêm gói vé</button>
+          <button className='button--orange'>Thêm gói vé</button>
 
 
         </div>

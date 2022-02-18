@@ -38,11 +38,16 @@
 #myNavBar .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected{
     background-color: #FFB800;
 }
-#myNavBar .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected i{
-    color: white;
+#myNavBar  {
+    .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal){
+        .ant-menu-item-selected i{
+            color: white;
+        }
+        
+    }
+   
+    
 }
-
-
 /* input search  */
 .input-group{
     display: flex;
@@ -65,9 +70,11 @@ input.input-control:focus{
    color: #1E0D03;
    margin-left: 1rem;
 }
-.icon-control.anticon svg{
-    height: 24px;
-    width: 24px;
+.icon-control.anticon {
+    svg{
+        height: 24px;
+        width: 24px;
+    }
 }
 
 /* Content */

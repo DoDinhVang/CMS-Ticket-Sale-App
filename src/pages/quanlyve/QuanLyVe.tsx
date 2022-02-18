@@ -2,7 +2,6 @@ import React from 'react'
 import InputSearch from '../../component/InputSearch';
 import { Table, Tag } from 'antd';
 import { FilterOutlined } from '@ant-design/icons'
-import './quanLyVe.css'
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { getTicketListActionCreator } from '../../redux/action-creator/quanLyVeActionCreator';
@@ -133,16 +132,16 @@ export default function QuanLyVe() {
 
 
                 {/* filter ticket  and export file  */}
-                <div className='flex justify-between items-center'>
-                    <div className='filter__ticket' onClick={() => {
+                <div className='flex  icon-filter justify-between items-center'>
+                    <button className='button--white mr-3' onClick={() => {
                         dispatch(modalVisibleActionCreator(true))
                     }}>
                         <FilterOutlined />
                         <span style={{ marginLeft: '12px' }}>Lọc vé</span>
-                    </div>
-                    <div className='export__file'>
+                    </button>
+                    <button className='button--white'>
                         <span>Xuất file (.csv)</span>
-                    </div>
+                    </button>
                 </div>
             </div>
 

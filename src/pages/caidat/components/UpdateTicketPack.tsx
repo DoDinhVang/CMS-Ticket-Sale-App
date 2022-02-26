@@ -6,8 +6,8 @@ import { State } from '../../../redux/configStore';
 import { useFormik } from 'formik';
 import { TicketPack } from '../../../model/quanlygoive/TicketPack'
 import moment from 'moment';
-import { baseService } from '../../../service/BaseService';
-
+import firebase from "firebase";
+import { timeStamp } from 'console';
 const { Option } = Select;
 export default function UpdateTicketPack() {
 
@@ -23,6 +23,7 @@ export default function UpdateTicketPack() {
     const initialValues: TicketPack = {
         giaVe: infoTicketPack.giaVe,
         maGoi: infoTicketPack.maGoi,
+        docId: infoTicketPack.docId,
         maSuKien: infoTicketPack.maSuKien,
         tenSuKien: infoTicketPack.tenSuKien,
         giaCombo: infoTicketPack.giaCombo,
@@ -41,20 +42,42 @@ export default function UpdateTicketPack() {
             dispatch(updateTicketPackActionCreator(values))
         }
     })
-
-    const handleOnChangeDatePicker = (name: string) => {
-
-        return (value: any) => {
-            formik.setFieldValue(name, moment(value).format())
-        }
-    }
-    const handleOnChangeTimePicker = (name: string) => {
+    // moment((formik.values.ngayApDung).toDate()).format('DD/MM/YYY h:mm:ss')
+    // console.log('ngayapdung', formik.values.ngayApDung?.toDate())
+    const handleOnChangeDatePicker = (name: string,date:Date) => {
 
         return (value: any) => {
-            formik.setFieldValue(name, moment(value).format())
+            const datePicker = new Date(moment(value).format())
+            const day = datePicker.getDate()
+            const month = datePicker.getMonth()
+            const year = datePicker.getFullYear()
+            const hour = date.getHours()
+            const minute = date.getMinutes()
+            const second = date.getSeconds()
+            console.log('time',date)
+            // const timestamp = firebase.firestore.Timestamp.fromDate(new Date(moment(value).format('DD / MM /YYYY')));
+            const timestamp = firebase.firestore.Timestamp.fromDate(new Date(year,month,day,hour,minute,second))
+            
+            console.log('timestamp', timestamp)
+            formik.setFieldValue(name, timestamp)
         }
     }
-    // console.log(formik.moment)
+    const handleOnChangeTimePicker = (name: string, date: Date) => {
+
+        return (value: any) => {
+            const timePicker = new Date(moment(value).format())
+            console.log('timePicker',timePicker)
+            const day = date.getDate()
+            const month = date.getMonth()
+            const year = date.getFullYear()
+            const hour =  timePicker.getHours()
+            const minute = timePicker.getMinutes()
+            const second = timePicker.getSeconds()
+            const timestamp = firebase.firestore.Timestamp.fromDate(new Date(year,month,day,hour,minute,second))
+            formik.setFieldValue(name, timestamp)
+        }
+    }
+
 
     return (
         <>
@@ -64,7 +87,7 @@ export default function UpdateTicketPack() {
                     <div className='flex items-center justify-between mb-5'>
                         <div>
                             <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Mã sự kiện <span>*</span></p>
-                            <Input name = 'maSuKien' onChange={formik.handleChange} style={{ width: '245px', height: '40px', borderRadius: '8px' }} value={formik.values.maSuKien} />
+                            <Input name='maSuKien' onChange={formik.handleChange} style={{ width: '245px', height: '40px', borderRadius: '8px' }} value={formik.values.maSuKien} />
                         </div>
                         <div>
                             <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Tên sự kiện</p>
@@ -76,22 +99,15 @@ export default function UpdateTicketPack() {
                         <div>
                             <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Ngày áp dụng</p>
                             <div className='flex items-center'>
-                                <DatePicker format='DD/MM/YYYY' value={moment(formik.values.ngayApDung)}  style={{ height: '40px', marginRight: '8px', borderRadius: '8px' }} onChange={handleOnChangeDatePicker('ngayApDung')} />
-                                <TimePicker format='h:mm:ss' value={moment(formik.values.ngayApDung, 'h:mm:ss')} style={{ height: '40px', borderRadius: '8px' }} onChange={(values) => {
-                                     
-                                 }}></TimePicker>
+                                <DatePicker format='DD/MM/YYYY' value={moment(formik.values.ngayApDung?.toDate(), 'DD /MM/YYYY')} style={{ height: '40px', marginRight: '8px', borderRadius: '8px' }} onChange={handleOnChangeDatePicker('ngayApDung',formik.values.ngayApDung?.toDate())} />
+                                <TimePicker format='hh:mm:ss' value={moment(formik.values.ngayApDung?.toDate(), 'hh:mm:ss')} style={{ height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayApDung',formik.values.ngayApDung?.toDate())}></TimePicker>
                             </div>
                         </div>
                         <div style={{ flexBasis: '367px' }} >
                             <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Ngày hết hạn</p>
                             <div className='flex items-center'>
-                                <DatePicker format='DD/MM/YYYY' value={moment(formik.values.ngayHetHan)}style={{ height: '40px', marginRight: '8px', borderRadius: '8px' }} onChange={(date) => {
-                                  
-
-                                }} />
-                                <TimePicker  format='h:mm:ss' value={moment(formik.values.ngayHetHan, 'h:mm:ss')} style={{ height: '40px', borderRadius: '8px' }} onChange={(value) => {
-                                    formik.setFieldValue('ngayHetHan',moment(value).format('h:mm:ss '))
-                                }}></TimePicker>
+                                <DatePicker format='DD/MM/YYYY' value={moment(formik.values.ngayHetHan?.toDate())} style={{ height: '40px', marginRight: '8px', borderRadius: '8px' }} onChange={handleOnChangeDatePicker('ngayHetHan',formik.values.ngayHetHan?.toDate())} />
+                                <TimePicker format='hh:mm:ss' value={moment(formik.values.ngayHetHan?.toDate(), 'hh:mm:ss')} style={{ height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayHetHan',formik.values.ngayHetHan?.toDate())}></TimePicker>
                             </div>
 
                         </div>
@@ -106,21 +122,21 @@ export default function UpdateTicketPack() {
                         </div>
                         <div>
                             <Checkbox className=' font-medium' style={{ color: '#1E0D03', lineHeight: '20px', opacity: '0.7', fontSize: '16px' }} onChange={(e) => { }} >Combo với giá vé</Checkbox>
-                            <Input name='giaCombo' onChange={(e)=>{
-                                const {value} = e.target
-                                formik.setFieldValue('giaCombo', {...formik.values.giaCombo,giaVe: value })
+                            <Input name='giaCombo' onChange={(e) => {
+                                const { value } = e.target
+                                formik.setFieldValue('giaCombo', { ...formik.values.giaCombo, giaVe: value })
                             }} value={formik.values.giaCombo?.giaVe} className='rounded-lg ' style={{ width: '148px', height: '40px' }} placeholder='Giá vé' />
                             <span className='text-base font-medium opacity-70 inline-block mx-2' style={{ color: '#1E0D03', lineHeight: '20px', fontSize: '16px' }}>/</span>
-                            <Input name='giaCombo' onChange={(e)=>{
-                                const {value} = e.target
-                                formik.setFieldValue('giaCombo', {...formik.values.giaCombo,soVe: value })
+                            <Input name='giaCombo' onChange={(e) => {
+                                const { value } = e.target
+                                formik.setFieldValue('giaCombo', { ...formik.values.giaCombo, soVe: value })
                             }} value={formik.values.giaCombo?.soVe} className='rounded-lg mr-2 ' style={{ width: '148px', height: '40px' }} placeholder='Số vé' />
                             <span className='text-base font-medium opacity-70 inline-block' style={{ color: '#1E0D03', lineHeight: '20px', fontSize: '16px' }}>Vé</span>
                         </div>
                     </div>
                     <div className='mb-5'>
                         <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Tình trạng</p>
-                        <Select  style={{ height: '40px', borderRadius: '8px', width: '176px' }} value={formik.values.trangThai} onChange={(value)=>{
+                        <Select style={{ height: '40px', borderRadius: '8px', width: '176px' }} value={formik.values.trangThai} onChange={(value) => {
                             formik.setFieldValue('trangThai', value)
                         }}>
                             <Option value={true}>Đang sử dụng</Option>

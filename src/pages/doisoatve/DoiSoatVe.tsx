@@ -14,13 +14,13 @@ import { Event } from '../../model/doiSoatVe/Events';
 export default function DoiSoatVe() {
 
     const { ticketList } = useSelector((state: State) => state.quanLyVeReducer)
-    const {eventList} = useSelector((state: State) => state.checkTicketReducer)
+    const { eventList } = useSelector((state: State) => state.checkTicketReducer)
     const dispatch = useDispatch()
     const lst = ticketList.map((ve: any, index: number) => {
         return { ...ve, key: index }
     })
 
-    
+
     const options = eventList.map((event: Event, index: number) => {
         console.log('event', event)
         return { label: event.tenSuKien, value: event.maSuKien }
@@ -76,19 +76,17 @@ export default function DoiSoatVe() {
     const data = lst
 
     const initialValues: FilterTicket = {
-        checkTicket: '',
-        eventId: 'CEC2021'
+        maSuKien: "CEC2021"
     }
-    
-    const handleSelectChangeValue = (value: string)=>{
-       formik.setFieldValue('eventId',value)
+
+    const handleSelectChangeValue = (value: string) => {
+        formik.setFieldValue('maSuKien', value)
     }
     const [value, setValue] = useState('')
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: initialValues,
         onSubmit: (values) => {
-            console.log('valyes', values)
             dispatch(filterTickerActionCreator(values))
         }
 
@@ -96,10 +94,20 @@ export default function DoiSoatVe() {
     console.log('value', value)
 
     const handleRadioChangeValue = (e: RadioChangeEvent) => {
-        const {value} = e.target
+        const { value } = e.target
         setValue(value)
         formik.setFieldValue('checkTicket', value)
-       
+
+    }
+    const onChangeDatePickerValue = (name: string) => {
+        return (value: any) => {
+            const modifiedDate = {
+                ...formik.values.ngaySuDung,
+                [name]: new Date(moment(value).format())
+
+            }
+            formik.setFieldValue(`ngaySuDung`, modifiedDate)
+        }
     }
     useEffect(() => {
         dispatch(getTicketListActionCreator())
@@ -114,16 +122,16 @@ export default function DoiSoatVe() {
                 <InputSearch placeholder='Tìm bằng số vé'></InputSearch>
                 <Table className='mt-6 ' columns={columns} dataSource={data} pagination={{ position: ['bottomCenter'] }} />
             </div>
-          
-                <div className='rounded-3xl bg-white p-6' style={{ width: '320px' }}>
-                <form onSubmit={formik.handleSubmit} className = 'block h-full'>
+
+            <div className='rounded-3xl bg-white p-6' style={{ width: '320px' }}>
+                <form onSubmit={formik.handleSubmit} className='block h-full'>
                     <h3 className='font-bold text-2xl' style={{ marginBottom: '29px' }}>Lọc Vé</h3>
-                    <Select options={options} defaultValue = 'CEC2021' onChange={handleSelectChangeValue} style={{ width: '280px', background: '#F1F4F8', borderRadius: '8px', marginBottom: '24px' }}>
+                    <Select options={options} defaultValue='CEC2021' onChange={handleSelectChangeValue} style={{ width: '280px', background: '#F1F4F8', borderRadius: '8px', marginBottom: '24px' }}>
 
                     </Select>
                     <div className='flex justify-between mb-6'>
                         <p className='whitespace-nowrap mb-0 font-semibold text-base'>tình trạng đối soát</p>
-                        <Radio.Group name='checkTicket' style={{ flexBasis: '110px' }} onChange={handleRadioChangeValue} value={value}>
+                        <Radio.Group name='tinhTrangDoiSoat' style={{ flexBasis: '110px' }} onChange={handleRadioChangeValue} value={value}>
                             <Space direction="vertical">
                                 <Radio value={''}>tất cả</Radio>
                                 <Radio value={true}>đã đổi soát</Radio>
@@ -137,17 +145,17 @@ export default function DoiSoatVe() {
                     </div>
                     <div className='flex justify-between items-center mb-6'>
                         <p className='mb-0 font-semibold text-base'>từ ngày</p>
-                        <DatePicker style={{ flexBasis: '110px' }} onChange={() => { }} />
+                        <DatePicker format='DD/MM/YYYY' style={{ flexBasis: '110px' }} onChange={onChangeDatePickerValue('startTime')} />
                     </div>
                     <div className='flex justify-between items-center mb-6'>
                         <p className='mb-0 font-semibold text-base'>đến ngày</p>
-                        <DatePicker style={{ flexBasis: '110px' }} onChange={() => { }} />
+                        <DatePicker format='DD/MM/YYYY' style={{ flexBasis: '110px' }} onChange={onChangeDatePickerValue('endTime')} />
                     </div>
                     <div className='text-center'>
-                    <button type='submit' className='filter__ticket w-40 h-12'>Lọc</button>
+                        <button type='submit' className='button--white w-40 h-12'>Lọc</button>
                     </div>
-                    </form>
-                </div>
+                </form>
+            </div>
 
         </div>
     )

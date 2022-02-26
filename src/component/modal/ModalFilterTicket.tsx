@@ -10,53 +10,73 @@ import { filterTickerActionCreator, getCheckInGateListActionCreator } from '../.
 import { CheckInGate } from '../../model/quanlyve/CheckInGate';
 import { FilterTicket } from '../../model/quanlyve/FilterTicket'
 import { useFormik } from 'formik';
-
-
+import firebase from 'firebase';
+import moment from 'moment';
+import { toNamespacedPath } from 'node:path/posix';
 
 export default function ModalFilterTicket() {
 
   const { modalVisible } = useSelector((state: State) => state.modalFilterTicketReducer)
   const { checkInGateList } = useSelector((state: State) => state.quanLyVeReducer);
   const dispatch = useDispatch();
-  const plainOption = checkInGateList.map((checkInGate: CheckInGate) => {
-    return checkInGate.id
-  })
-  const initialValues: FilterTicket = {
-    checkInGateId: plainOption,
-    ticketStatus: '',
-    checkTicket: '',
-    eventId: ''
-  }
+
+  const initialValues: FilterTicket = {};
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: initialValues,
     onSubmit: values => {
+      console.log('value', values)
       dispatch(filterTickerActionCreator(values))
     },
   });
 
-  const onChange = (date: any, dateString: any) => {
-    console.log(date, dateString);
+  const onChange = (name: string) => { // ngày sử dụng vé
+
+    return (value: any) => {
+
+      const modifiedDate = {
+        ...formik.values.ngaySuDung,
+        [name]: new Date(moment(value).format())
+
+      }
+      formik.setFieldValue(`ngaySuDung`, modifiedDate)
+    }
   }
 
 
-  const [disableCheckBox, setDisableCheckBox] = useState(true)
+  const [disableCheckBox, setDisableCheckBox] = useState(false)
 
- 
-  const [checkedList, setCheckedList] = useState<any>([1,2,3,4,5]);
+  console.log('disableCheckBox', disableCheckBox)
+  const [checkedList, setCheckedList] = useState<any>([]);
   console.log('checkedlist', checkedList)
 
 
   const checkboxValueOnchange = (value: any) => {
 
-    setCheckedList([...value])
-    formik.setFieldValue('checkInGateId', value)
+    let checkBoxValueIsEmpty: boolean = false;
+    let valueIsEmpty: string = '';
+    for (let i = 0; i < value.length; i++) {
+      if (value[i] === '') {
+        checkBoxValueIsEmpty = true;
+        break;
+      }
+      checkBoxValueIsEmpty = false;
+    }
+
+    if (checkBoxValueIsEmpty) {
+      setCheckedList([''])
+      formik.setFieldValue('congCheckInId', valueIsEmpty)
+
+    } else {
+      setCheckedList([...value])
+      formik.setFieldValue('congCheckInId', value)
+    }
+
   }
 
 
   useEffect(() => {
     dispatch(getCheckInGateListActionCreator())
-   
 
   }, [])
   return <div>
@@ -78,17 +98,17 @@ export default function ModalFilterTicket() {
           <div className='flex items-center'>
             <div style={{ marginRight: '130px' }}>
               <p className='text-title'>Từ ngày</p>
-              <DatePicker style={{ borderRadius: '8px' }} onChange={onChange} />
+              <DatePicker format='DD/MM/YYYY' style={{ borderRadius: '8px' }} onChange={onChange('startTime')} />
             </div>
             <div >
               <p className='text-title'>Đến ngày</p>
-              <DatePicker style={{ borderRadius: '8px' }} onChange={onChange} />
+              <DatePicker format='DD/MM/YYYY' style={{ borderRadius: '8px' }} onChange={onChange(`endTime`)} />
             </div>
           </div>
           {/* radio input */}
           <div style={{ marginTop: '20px' }}>
             <p className='text-title'>Tình trạng sử dụng</p>
-            <Radio.Group name='ticketStatus' defaultValue={''} onChange={formik.handleChange}>
+            <Radio.Group name='tinhTrangSuDung' defaultValue={''} onChange={formik.handleChange}>
               <Radio value={''}>Tất cả</Radio>
               <Radio value={DA_SU_DUNG}>Đã sử dụng</Radio>
               <Radio value={CHUA_SU_DUNG}>Chưa sử dụng</Radio>
@@ -100,23 +120,21 @@ export default function ModalFilterTicket() {
           <div style={{ marginTop: '20px' }}>
             <p className='text-title'>Cổng check-in</p>
             <div>
-              <Checkbox defaultChecked = {true} onChange={(e: any) => {
 
-                const { checked } = e.target
-
-                if (checked) {
-                  setDisableCheckBox(true)
-                  setCheckedList(plainOption)
-                  formik.setFieldValue('checkInGateId', plainOption)
-
-                } else {
-                  setDisableCheckBox(false)
-                  setCheckedList([])
-                  formik.setFieldValue('checkInGateId', [])
-                }
-              }}>Tất cả</Checkbox>
-              <Checkbox.Group name='checkInGateId'  value={checkedList} style={{ width: '100%' }} onChange={checkboxValueOnchange}>
+              <Checkbox.Group value={checkedList} style={{ width: '100%' }} onChange={checkboxValueOnchange}>
                 <Row>
+                  <Col key='all' span={8}>
+                    <Checkbox value={''} onChange={(e: any) => {
+                      const { checked } = e.target
+                      console.log('checkded', checked)
+                      if (checked) {
+                        setDisableCheckBox(true)
+                      } else {
+                        setDisableCheckBox(false)
+                      }
+
+                    }}>Tất cả</Checkbox>
+                  </Col>
                   {checkInGateList.map((checkInGate: CheckInGate, index: number) => {
                     return <Col key={index} span={8}>
                       <Checkbox value={checkInGate.id} disabled={disableCheckBox}>{checkInGate.tenCong}</Checkbox>

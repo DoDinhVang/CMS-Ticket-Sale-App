@@ -1,6 +1,11 @@
+import { Console } from "console";
+import { type } from "os";
 import { db } from "../firebase/firebase";
 import { TicketPack } from "../model/quanlygoive/TicketPack";
 import { FilterTicket } from "../model/quanlyve/FilterTicket";
+import { TicketList } from "../model/quanlyve/TicketList";
+import { STATUS_CODE } from "../util/config";
+import firebase from "firebase";
 export class BaseService {
 
     get(collectionName: string) {
@@ -8,7 +13,7 @@ export class BaseService {
             .then((data) => {
                 const lst: any = [];
                 data.forEach((doc: any) => {
-                    lst.push(doc.data())
+                    lst.push({ ...doc.data(), docId: doc.id })
                 });
                 return lst;
             })
@@ -27,7 +32,7 @@ export class BaseService {
             .then((data) => {
                 const lst: any = [];
                 data.forEach((doc: any) => {
-                    lst.push(doc.data())
+                    lst.push({ ...doc.data(), docId: doc.id })
                 })
                 return lst
             })
@@ -37,84 +42,72 @@ export class BaseService {
     }
 
     filterTicKet(collectionName: string, values: FilterTicket) {
+        console.log('params', values)
+        const matchesCollection = db.collection(collectionName);
+        let query: any = matchesCollection;
+        for (const key in values) {
 
-        if (values.checkTicket === '' && values.eventId === '') {
-            if (values.ticketStatus === '') {
-                return db.collection(collectionName).where("congCheckInId", "in", values.checkInGateId).get()
-                    .then((data) => {
-                        const lst: any = [];
-                        data.forEach((doc: any) => {
-                            lst.push(doc.data())
-                        })
-                        return lst
-                    })
-                    .catch((error) => {
-                        console.log("Error getting documents: ", error);
-                    });
+            const value = values[key as keyof FilterTicket]
+            if (value === "") { 
+                continue;
             }
-            return db.collection(collectionName).where("congCheckInId", "in", values.checkInGateId).where('tinhTrangSuDung', '==', values.ticketStatus).get()
-                .then((data) => {
-                    const lst: any = [];
-                    data.forEach((doc: any) => {
-                        lst.push(doc.data())
-                    })
-                    return lst
-                })
-                .catch((error) => {
-                    console.log("Error getting documents: ", error);
-                });
-        } else {
-            if (values.checkTicket === '') {
-                return db.collection(collectionName).where("maSuKien", "==", values.eventId).get()
-                    .then((data) => {
-                        const lst: any = [];
-                        data.forEach((doc: any) => {
-                            lst.push(doc.data())
-                        })
-                        return lst
-                    })
-                    .catch((error) => {
-                        console.log("Error getting documents: ", error);
-                    });
+            if (key === 'congCheckInId') {
+                query = query.where(key, 'in', value)
+            } else if (key === 'ngaySuDung') {
+
+                const startTime = values.ngaySuDung?.startTime
+                const endTime = values.ngaySuDung?.endTime
+
+                if (startTime !== undefined) {
+                    const modifiedStartTime = firebase.firestore.Timestamp.fromDate(startTime)
+                    query = query.where(key, '>=', modifiedStartTime)
+                }
+                if (endTime !== undefined) {
+                    const modifiedEndTime = firebase.firestore.Timestamp.fromDate(endTime)
+                    query = query.where(key, '<=', modifiedEndTime)
+                }
+            } else {
+                query = query.where(key, '==', value)
             }
-            return db.collection(collectionName).where("tinhTrangDoiSoat", "==", values.checkTicket).where('maSuKien', '==', values.eventId).get()
-                .then((data) => {
-                    const lst: any = [];
-                    data.forEach((doc: any) => {
-                        lst.push(doc.data())
-                    })
-                    return lst
-                })
-                .catch((error) => {
-                    console.log("Error getting documents: ", error);
-                });
         }
+        return query.get().then((data: any) => {
+            const lst: any = [];
+            data.forEach((doc: any) => {
+                lst.push({ ...doc.data(), docId: doc.id })
+            })
+            return lst
+        }).catch((error: any) => {
+            console.log(error)
+        })
+
+
+
+
     }
 
-    updateTicketPack(collectionName: string, values: TicketPack) {
-        switch (values.maGoi) {
-            case 'goiGiaDinh':
-                return db.collection(collectionName).doc('06eWI5IXxxyfC4VdQwYH').update({
-                    tenSuKien: values.tenSuKien,
-                    maSuKien: values.maSuKien,
-                    giaVe: values.giaVe,
-                    giaCombo: values.giaCombo,
-                    trangThai: values.trangThai
-                })
-            case 'goiSuKien':
-                return db.collection(collectionName).doc('XNL1DzzywwSMMBfuamyN').update({
-                    tenSuKien: values.tenSuKien,
-                    maSuKien: values.maSuKien,
-                    giaVe: values.giaVe,
-                    giaCombo: values.giaCombo,
-                    trangThai: values.trangThai
-                })
 
-            default:
-                break;
-        }
-       
+    update(collectionName: string, values: any, docId: string) {
+        return db.collection(collectionName).doc(docId).update({ ...values }).then(() => {
+            return {
+                status: 200,
+                message: 'cập nhật thành công'
+            }
+        }).catch((error) => {
+            return {
+                status: 500
+            }
+        })
     }
+
+    updateTicketPack({ docId, ...resParam }: TicketPack) {
+        return this.update('danhSachGoi', resParam, docId);
+
+    }
+    updateTicketList({ docId, ...resParams }: TicketList) {
+        return this.update('danhSahVe', resParams, docId)
+    }
+
+
 
 
 }

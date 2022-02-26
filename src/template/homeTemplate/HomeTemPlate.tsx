@@ -44,7 +44,7 @@ export default function HomeTemPlate(props: homTemplateProps) {
                         <div className="logo" style={{ marginBottom: '59px' }}>
                             <img style={{ height: '58px', width: '133px' }} src={require('../../assets/img/insight-logo.png')} alt='insight-logo_img'></img>
                         </div>
-                        <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']}>
+                        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                             <Menu.Item key="1" icon={<i className="fa fa-home"></i>} onClick={() => {
                                 history.push('/trangchu')
                             }}>

@@ -1,7 +1,7 @@
-const timeStamp = Date.now()
 
 export interface TicketPack {
     maGoi: string
+    docId:string
     maSuKien: string
     tenSuKien: string
     tenGoi: string
@@ -16,11 +16,12 @@ export interface TicketPack {
 }
 export class InfoTicketPack implements TicketPack {
     maGoi: string = ''
+    docId: string = ''
     maSuKien: string = ''
     tenSuKien: string = ''
     tenGoi: string = ''
-    ngayApDung: any = new Date()
-    ngayHetHan: any = new Date()
+    ngayApDung: any 
+    ngayHetHan: any
     trangThai: boolean = false
     giaCombo? = {
         soVe: 0 ,

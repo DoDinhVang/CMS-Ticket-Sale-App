@@ -3,6 +3,7 @@ import { InfoTicketPack, TicketPack } from '../../model/quanlygoive/TicketPack'
 import { TickPackManagerAction } from '../../redux/action/quanLyGoiVeAction'
 import { TicketPackManagerType } from '../../redux/types/quanLyGoiVeType'
 import { baseService } from '../../service/BaseService'
+import { STATUS_CODE } from '../../util/config'
 import { LoadingAction } from '../action/loadingAction'
 
 import { hideLoadingActionCreator, showLoadingActionCreator } from './loadingActionCreator'
@@ -41,8 +42,11 @@ export const updateTicketPackActionCreator = (values: TicketPack) => {
     return async (dispatch: Dispatch<any>) => {
 
         try {
-            const data = await baseService.updateTicketPack('danhSachGoi', values)
-            dispatch(getTicketPackListActionCreator())
+            const {status}  = await baseService.updateTicketPack(values)
+            if(status === STATUS_CODE.SUCCESS){
+                dispatch(getTicketPackListActionCreator())
+            }
+          
         } catch (error) {
             console.log('error', error)
         }

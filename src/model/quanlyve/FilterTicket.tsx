@@ -1,6 +1,13 @@
+
 export interface FilterTicket{
-        checkInGateId?: number[],
-        ticketStatus?: string,
-        eventId?: string,
-        checkTicket?: boolean | string
+        congCheckInId?: number[] | string,
+        tinhTrangSuDung?: string,
+        maSuKien?: string,
+        tinhTrangDoiSoat?: boolean | string,
+        ngaySuDung?:  {
+                startTime: Date,
+                endTime: Date
+        },
+
+
 }

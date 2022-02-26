@@ -7,10 +7,13 @@ import { Table, Tag } from 'antd'
 import { FormOutlined } from '@ant-design/icons';
 import { TicketPack } from '../../model/quanlygoive/TicketPack'
 import moment from 'moment'
+import history from '../../util/history'
+import { downloadCSVActionCreator } from '../../redux/action-creator/quanLyVeActionCreator'
+
 
 
 export default function CaiDat() {
-  const { ticketPackList} = useSelector((state: State) => state.ticketPackManagerReducer)
+  const { ticketPackList } = useSelector((state: State) => state.ticketPackManagerReducer)
   const lst = ticketPackList.map((ticketPack: TicketPack, index: number) => {
     return { ...ticketPack, key: index }
   })
@@ -65,9 +68,10 @@ export default function CaiDat() {
       title: 'Giá combo (VND/combo)',
       dataIndex: 'giaCombo',
       key: 'giaCombo',
-      render: (text: any) => {
+      render: (text: TicketPack['giaCombo']) => {
+        console.log('text', text)
         return <>
-          {text ? <span>{`${text.giaVe}/ ${text.soVe}`}</span> : <span></span>}
+          {text?.giaVe ? <span>{`${text.giaVe}/ ${text.soVe}`}</span> : <span></span>}
         </>
 
       }
@@ -86,19 +90,18 @@ export default function CaiDat() {
     {
       title: '',
       key: 'capNhat',
-      render: (record: TicketPack) => {
+      render: (record: any) => {
         console.log('record', record)
-        return <div  onClick={()=>{
-          
+        return <div onClick={() => {
           dispatch(editModalVisibleActionCreator(true))
-          dispatch(getInfoTicketPackActionCreator({...record, ngayApDung: moment(record.ngayApDung.toDate()).format(), ngayHetHan: moment(record.ngayHetHan.toDate()).format()}))
+          dispatch(getInfoTicketPackActionCreator({ ...record}))
         }} className='flex items-center cursor-pointer'><FormOutlined style={{ color: '#FF993C' }} className='mr-2' /><span style={{ color: '#FF993C' }} className='whitespace-nowrap'>Cập nhật</span></div>
       }
     },
   ]
   const data = lst
   return (
-    <div id ='caiDat'>
+    <div id='caiDat'>
 
       <div className='flex justify-between items-center'>
         {/* input search  */}
@@ -107,8 +110,10 @@ export default function CaiDat() {
 
         {/* filter ticket  and export file  */}
         <div className='flex justify-between items-center'>
-          <button className='button--white mr-3'>
-            <span>Xuất file (.csv)</span>
+          <button onClick={()=>{
+              downloadCSVActionCreator(lst)
+          }} className='button--white mr-3'>
+            Xuất file (.csv)
           </button>
 
 
@@ -118,7 +123,7 @@ export default function CaiDat() {
         </div>
       </div>
       <div>
-        <Table className='mt-6 'columns={columns} dataSource={data} pagination={{ position: ['bottomCenter'] }} />
+        <Table className='mt-6 ' columns={columns} dataSource={data} pagination={{ position: ['bottomCenter'] }} />
       </div>
 
     </div>

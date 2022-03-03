@@ -7,6 +7,10 @@
         font-weight: $fw;
         padding: $pd-x $pd-y;
 }
-@mixin btn($color) {
-    color: $color;
+
+
+@mixin datePicker($height,$width,$borderRadius){
+    height: $height;
+    width: $width;
+    border-radius: $borderRadius;
 }

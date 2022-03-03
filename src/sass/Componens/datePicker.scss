@@ -1,0 +1,11 @@
+@import '../Helpers/variables.scss';
+@import '../Helpers//mixin.scss';
+.datePicker--ver--0{
+    position: relative;
+    @include datePicker($height-0,$width-0,$border-radius-8);
+    .icons{
+        position: absolute;
+        right: 10px;
+        top: 5%;
+    }
+}

@@ -14,7 +14,7 @@ export const getTicketListActionCreator = () => {
             type: TicketManagerType.GET_TICKET_LIST,
             payload: data
         })
-       dispatch(hideLoadingActionCreator())
+        dispatch(hideLoadingActionCreator())
 
     }
 }
@@ -61,28 +61,3 @@ export const filterTickerActionCreator = (values: FilterTicket) => {
         dispatch(modalVisibleActionCreator(false))
     }
 }
-
-    // create and download csv
-   export const createCSVActionCreator = (array: any[]) => {
-        let keys = Object.keys(array[0])
-        let result = ''
-        result += keys.join(','); //Comma Seperates Headers
-        result += '\n'; //New Row
-        array.forEach(function (item) { //Goes Through Each Array Object
-            keys.forEach(function (key) {//Goes Through Each Object value
-                result += item[key] + ','; //Comma Seperates Each Key Value in a Row
-            })
-            result += '\n';//Creates New Row
-        })
-
-        return result;
-    }
-export const downloadCSVActionCreator = (array: any) => {
-        let csv = 'data:text/csv;charset=utf-8,' + createCSVActionCreator(array); //Creates CSV File Format
-        let excel = encodeURI(csv); //Links to CSV 
-
-        let link = document.createElement('a');
-        link.setAttribute('href', excel); //Links to CSV File 
-        link.setAttribute('download', 'test.csv'); //Filename that CSV is saved as
-        link.click();
-    }

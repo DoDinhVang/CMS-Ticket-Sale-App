@@ -13,11 +13,13 @@ import { useFormik } from 'formik';
 import firebase from 'firebase';
 import moment from 'moment';
 import { toNamespacedPath } from 'node:path/posix';
+import MyDatePicker from '../MyDatePicker';
 
 export default function ModalFilterTicket() {
 
   const { modalVisible } = useSelector((state: State) => state.modalFilterTicketReducer)
   const { checkInGateList } = useSelector((state: State) => state.quanLyVeReducer);
+  const {date} = useSelector((state:State)=>state.calendarReducer)
   const dispatch = useDispatch();
 
   const initialValues: FilterTicket = {};
@@ -98,11 +100,13 @@ export default function ModalFilterTicket() {
           <div className='flex items-center'>
             <div style={{ marginRight: '130px' }}>
               <p className='text-title'>Từ ngày</p>
-              <DatePicker format='DD/MM/YYYY' style={{ borderRadius: '8px' }} onChange={onChange('startTime')} />
+              {/* <DatePicker format='DD/MM/YYYY' style={{ borderRadius: '8px' }} onChange={onChange('startTime')} /> */}
+              <MyDatePicker calendarHidden = {true} date = {date}></MyDatePicker>
             </div>
             <div >
               <p className='text-title'>Đến ngày</p>
-              <DatePicker format='DD/MM/YYYY' style={{ borderRadius: '8px' }} onChange={onChange(`endTime`)} />
+              <MyDatePicker calendarHidden = {true} date = {date} ></MyDatePicker>
+              {/* <DatePicker format='DD/MM/YYYY' style={{ borderRadius: '8px' }} onChange={onChange(`endTime`)} /> */}
             </div>
           </div>
           {/* radio input */}

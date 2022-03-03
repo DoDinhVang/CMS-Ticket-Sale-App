@@ -18,7 +18,6 @@ export default function QuanLyVe() {
         goiSuKien: ''
     })
 
-
     const [maGoi, setMaGoi] = useState('goiGiaDinh')
 
     const lst = ticketList.filter((ve: any) => ve.maGoi === maGoi).map((ve: any, index: number) => {

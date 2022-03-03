@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import InputSearch from '../../component/InputSearch'
-import { getTicketPackListActionCreator, editModalVisibleActionCreator, getInfoTicketPackActionCreator } from '../../redux/action-creator/quanLyGoiVeActionCreator'
+import { getTicketPackListActionCreator, editModalVisibleActionCreator, getInfoTicketPackActionCreator, addModalVisibleActionCreator } from '../../redux/action-creator/quanLyGoiVeActionCreator'
 import { State } from '../../redux/configStore'
 import { Table, Tag } from 'antd'
 import { FormOutlined } from '@ant-design/icons';
 import { TicketPack } from '../../model/quanlygoive/TicketPack'
 import moment from 'moment'
 import history from '../../util/history'
-import { downloadCSVActionCreator } from '../../redux/action-creator/quanLyVeActionCreator'
+import { downloadCSV } from '../../util/settings'
 
 
 
@@ -94,12 +94,24 @@ export default function CaiDat() {
         console.log('record', record)
         return <div onClick={() => {
           dispatch(editModalVisibleActionCreator(true))
-          dispatch(getInfoTicketPackActionCreator({ ...record}))
+          dispatch(getInfoTicketPackActionCreator({ ...record }))
         }} className='flex items-center cursor-pointer'><FormOutlined style={{ color: '#FF993C' }} className='mr-2' /><span style={{ color: '#FF993C' }} className='whitespace-nowrap'>Cập nhật</span></div>
       }
     },
   ]
   const data = lst
+  const csvContent = ticketPackList.map((ticketPack: TicketPack, index: number) => {
+    return {
+      "STT": index,
+      "Mã Gói": ticketPack.maGoi,
+      "Tên gói Vé": ticketPack.tenGoi,
+      "Ngày áp dụng": moment(ticketPack.ngayApDung.toDate()).format("DD / MM / YYYY"),
+      "Ngày hết hạn": moment(ticketPack.ngayHetHan.toDate()).format("DD / MM / YYYY"),
+      "Giá vé": ticketPack.giaVe,
+      "Giá vé combo": ticketPack.giaCombo?.giaVe ? `${ticketPack.giaCombo.giaVe} / ${ticketPack.giaCombo.soVe}` : "",
+      "Tình Trạng": ticketPack.trangThai ? "Đang sử dụng" : "Chưa sử dụng"
+    }
+  })
   return (
     <div id='caiDat'>
 
@@ -110,16 +122,14 @@ export default function CaiDat() {
 
         {/* filter ticket  and export file  */}
         <div className='flex justify-between items-center'>
-          <button onClick={()=>{
-              downloadCSVActionCreator(lst)
+          <button onClick={() => {
+            downloadCSV(csvContent)
           }} className='button--white mr-3'>
             Xuất file (.csv)
           </button>
-
-
-          <button className='button--orange'>Thêm gói vé</button>
-
-
+          <button className='button--orange' onClick={()=>{
+            dispatch(addModalVisibleActionCreator(true))
+          }}>Thêm gói vé</button>
         </div>
       </div>
       <div>

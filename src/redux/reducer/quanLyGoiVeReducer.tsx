@@ -5,6 +5,7 @@ import { TicketPackManagerType } from "../types/quanLyGoiVeType"
 const initialState = {
     ticketPackList: Array<TicketPack>(),
     isUpdateModalVisible: false,
+    isAddModalVisible: false,
     infoTicketPack: new InfoTicketPack()
 }
 
@@ -17,6 +18,9 @@ const ticketPackManagerReducer = (state = initialState, action: TickPackManagerA
             return {...state, isUpdateModalVisible: action.payload}
         case TicketPackManagerType.GET_INFO_TICKET_PACK:
             return {...state, infoTicketPack: action.payload}
+        case TicketPackManagerType.SET_ADD_MODAL_VISIBLE:
+            return {...state, isAddModalVisible: action.payload}
+
         default:
             return state
     }

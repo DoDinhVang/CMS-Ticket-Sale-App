@@ -30,6 +30,15 @@ export const editModalVisibleActionCreator = (isEditModalVisible: boolean) => {
         payload: isEditModalVisible
     }
 }
+export const addModalVisibleActionCreator = (isAddModalVisible: boolean) => {
+    return {
+        type: TicketPackManagerType.SET_ADD_MODAL_VISIBLE,
+        payload: isAddModalVisible
+    }
+}
+
+
+
 export const getInfoTicketPackActionCreator = (infoTicketPack: TicketPack) => {
     return {
         type: TicketPackManagerType.GET_INFO_TICKET_PACK,

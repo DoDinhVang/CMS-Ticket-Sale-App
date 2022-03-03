@@ -58,10 +58,11 @@
     }
     
 }
-.ant-picker{
-    .anticon{
-        color: $color-orange-0;
-    }
+.anticon.anticon-calendar{
+    color: $color-orange-0;
+}
+.anticon.anticon-clock-circle{
+    color: $color-orange-0;
 }
 
 .modal_ticket_content {

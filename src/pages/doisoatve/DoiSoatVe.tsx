@@ -87,20 +87,21 @@ export default function DoiSoatVe() {
         enableReinitialize: true,
         initialValues: initialValues,
         onSubmit: (values) => {
+            console.log('dữ liệu', values)
             dispatch(filterTickerActionCreator(values))
         }
 
     })
-    console.log('value', value)
-
+  
     const handleRadioChangeValue = (e: RadioChangeEvent) => {
         const { value } = e.target
         setValue(value)
-        formik.setFieldValue('checkTicket', value)
+        formik.setFieldValue('tinhTrangDoiSoat', value)
 
     }
     const onChangeDatePickerValue = (name: string) => {
         return (value: any) => {
+
             const modifiedDate = {
                 ...formik.values.ngaySuDung,
                 [name]: new Date(moment(value).format())
@@ -145,11 +146,14 @@ export default function DoiSoatVe() {
                     </div>
                     <div className='flex justify-between items-center mb-6'>
                         <p className='mb-0 font-semibold text-base'>từ ngày</p>
+
                         <DatePicker format='DD/MM/YYYY' style={{ flexBasis: '110px' }} onChange={onChangeDatePickerValue('startTime')} />
+                        {/* <DatePicker format='DD/MM/YYYY' style={{ borderRadius: '8px' }} onChange={onChange('startTime')} /> */}
                     </div>
                     <div className='flex justify-between items-center mb-6'>
                         <p className='mb-0 font-semibold text-base'>đến ngày</p>
                         <DatePicker format='DD/MM/YYYY' style={{ flexBasis: '110px' }} onChange={onChangeDatePickerValue('endTime')} />
+             
                     </div>
                     <div className='text-center'>
                         <button type='submit' className='button--white w-40 h-12'>Lọc</button>

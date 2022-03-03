@@ -14,6 +14,11 @@ interface GetInfoTicketPack {
     type: TicketPackManagerType.GET_INFO_TICKET_PACK,
     payload: TicketPack
 }
+interface showAddTicketPackModal{
+    type: TicketPackManagerType.SET_ADD_MODAL_VISIBLE,
+    payload: boolean
+}
 
 
-export type TickPackManagerAction = getTicketPackList | ShowUpdateModal | GetInfoTicketPack 
+
+export type TickPackManagerAction = getTicketPackList | ShowUpdateModal | GetInfoTicketPack | showAddTicketPackModal

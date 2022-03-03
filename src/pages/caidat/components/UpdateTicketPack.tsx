@@ -20,6 +20,12 @@ export default function UpdateTicketPack() {
     const handleCancel = () => {
         dispatch(editModalVisibleActionCreator(false))
     };
+
+    const [disibleInputAnt, setdisibleInputAnt] = useState({
+        elementTicketPrice: false,
+        elementComboTicketPrice: false
+
+    })
     const initialValues: TicketPack = {
         giaVe: infoTicketPack.giaVe,
         maGoi: infoTicketPack.maGoi,
@@ -115,19 +121,45 @@ export default function UpdateTicketPack() {
                     <div className='mb-5'>
                         <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Giá vé áp dụng</p>
                         <div className='mb-3'>
-                            <Checkbox className=' font-medium' style={{ color: '#1E0D03', lineHeight: '20px', opacity: '0.7', fontSize: '16px' }} onChange={(e) => { }} >Vé lẻ (vnđ/vé) với giá</Checkbox>
-                            <Input name='giaVe' onChange={formik.handleChange} value={formik.values.giaVe} className='rounded-lg ' style={{ width: '148px', height: '40px' }} placeholder='Giá vé' />
+                            <Checkbox defaultChecked = {true} className=' font-medium' style={{ color: '#1E0D03', lineHeight: '20px', opacity: '0.7', fontSize: '16px' }} onChange={(e) => {
+                                const {checked} = e.target;
+                                if(checked){
+                                    setdisibleInputAnt({
+                                        ...disibleInputAnt,
+                                        elementTicketPrice: false
+                                    })
+                                }else{
+                                    setdisibleInputAnt({
+                                        ...disibleInputAnt,
+                                        elementTicketPrice: true
+                                    })
+                                }
+                             }} >Vé lẻ (vnđ/vé) với giá</Checkbox>
+                            <Input disabled = {disibleInputAnt.elementTicketPrice} name='giaVe' onChange={formik.handleChange} value={formik.values.giaVe} className='rounded-lg ' style={{ width: '148px', height: '40px' }} placeholder='Giá vé' />
                             <span className='text-base font-medium opacity-70 inline-block mx-2' style={{ color: '#1E0D03', lineHeight: '20px', fontSize: '16px' }}>/</span>
                             <span className='text-base font-medium opacity-70 inline-block' style={{ color: '#1E0D03', lineHeight: '20px', fontSize: '16px' }}>Vé</span>
                         </div>
                         <div>
-                            <Checkbox className=' font-medium' style={{ color: '#1E0D03', lineHeight: '20px', opacity: '0.7', fontSize: '16px' }} onChange={(e) => { }} >Combo với giá vé</Checkbox>
-                            <Input name='giaCombo' onChange={(e) => {
+                            <Checkbox defaultChecked = {true} className=' font-medium' style={{ color: '#1E0D03', lineHeight: '20px', opacity: '0.7', fontSize: '16px' }} onChange={(e) => {
+                                const {checked} = e.target
+                                if(checked){
+                                    setdisibleInputAnt({
+                                        ...disibleInputAnt,
+                                        elementComboTicketPrice: false
+                                    })
+                                }else{
+                                    setdisibleInputAnt({
+                                        ...disibleInputAnt,
+                                        elementComboTicketPrice: true
+                                    })
+                                }
+                             }} >Combo với giá vé</Checkbox>
+                            <Input disabled = {disibleInputAnt.elementComboTicketPrice} name='giaCombo' onChange={(e) => {
                                 const { value } = e.target
                                 formik.setFieldValue('giaCombo', { ...formik.values.giaCombo, giaVe: value })
                             }} value={formik.values.giaCombo?.giaVe} className='rounded-lg ' style={{ width: '148px', height: '40px' }} placeholder='Giá vé' />
                             <span className='text-base font-medium opacity-70 inline-block mx-2' style={{ color: '#1E0D03', lineHeight: '20px', fontSize: '16px' }}>/</span>
-                            <Input name='giaCombo' onChange={(e) => {
+                            <Input disabled ={disibleInputAnt.elementComboTicketPrice} name='giaCombo' onChange={(e) => {
                                 const { value } = e.target
                                 formik.setFieldValue('giaCombo', { ...formik.values.giaCombo, soVe: value })
                             }} value={formik.values.giaCombo?.soVe} className='rounded-lg mr-2 ' style={{ width: '148px', height: '40px' }} placeholder='Số vé' />

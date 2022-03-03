@@ -14,6 +14,9 @@ import '../src/sass/Base/customize.scss'
 import '../src/sass/Componens/button.scss'
 import '../src/sass/Layouts/quanLyVe.scss'
 import '../src/sass/Layouts/homeTemplate.scss'
+import AddTicketPack from './pages/caidat/components/AddTicketPack';
+// import Calendar from './component/Calendar';
+// import MyDatePicker from './component/MyDatePicker';
 
 function App() {
 
@@ -23,6 +26,9 @@ function App() {
       <Loading/>
       <ModalFilterTicket/>
       <UpdateTicketPack/>
+      <AddTicketPack/>
+    
+      {/* <Calendar/> */}
       <Switch>
         <HomeTemPlate padding='24px' background='white' title='Thống kê' exact path='/' Component={TrangChu}></HomeTemPlate>
         <HomeTemPlate padding='24px' background='white' title='Thống kê' exact path='/trangchu' Component={TrangChu}></HomeTemPlate>

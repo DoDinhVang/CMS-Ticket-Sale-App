@@ -20,8 +20,8 @@ export class InfoTicketPack implements TicketPack {
     maSuKien: string = ''
     tenSuKien: string = ''
     tenGoi: string = ''
-    ngayApDung: any 
-    ngayHetHan: any
+    ngayApDung: any
+    ngayHetHan: any 
     trangThai: boolean = false
     giaCombo? = {
         soVe: 0 ,

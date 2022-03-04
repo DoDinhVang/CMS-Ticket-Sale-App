@@ -10,6 +10,7 @@ const quanLyVeReducer = (state = initialState, action:TicketManagerAction) => {
   switch (action.type) {
 
     case TicketManagerType.GET_TICKET_LIST:
+      console.log("ticketlist", action.payload)
       return { ...state, ticketList: action.payload};
 
     case TicketManagerType.GET_CHECKIN_GATE_LIST:

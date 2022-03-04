@@ -5,8 +5,8 @@ export interface FilterTicket{
         maSuKien?: string,
         tinhTrangDoiSoat?: boolean | string,
         ngaySuDung?:  {
-                startTime: Date,
-                endTime: Date
+                startTime: any,
+                endTime: any
         },
 
 

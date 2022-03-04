@@ -45,40 +45,65 @@ export class BaseService {
         console.log('params', values)
         const matchesCollection = db.collection(collectionName);
         let query: any = matchesCollection;
-        for (const key in values) {
-
-            const value = values[key as keyof FilterTicket]
-            if (value === "") { 
-                continue;
-            }
-            if (key === 'congCheckInId') {
-                query = query.where(key, 'in', value)
-            } else if (key === 'ngaySuDung') {
-
-                const startTime = values.ngaySuDung?.startTime
-                const endTime = values.ngaySuDung?.endTime
-
-                if (startTime !== undefined) {
-                    const modifiedStartTime = firebase.firestore.Timestamp.fromDate(startTime)
-                    query = query.where(key, '>=', modifiedStartTime)
-                }
-                if (endTime !== undefined) {
-                    const modifiedEndTime = firebase.firestore.Timestamp.fromDate(endTime)
-                    query = query.where(key, '<=', modifiedEndTime)
-                }
-            } else {
-                query = query.where(key, '==', value)
+        let keys = Object.keys(values);
+        for (let i = 0; i < keys.length; i++) {
+            if (keys[i] === 'ngaySuDung') {
+                let index = i;
+                keys[index] = keys[0]
+                keys[0] = keys[index]
+                break;
             }
         }
+
+        for (let i = 0; i < keys.length; i++) {
+            // console.log('key', key)
+            const value = values[keys[i] as keyof FilterTicket]
+            if (value === "") {
+                continue;
+            } else if (keys[i] === 'congCheckInId') {
+                query = query.where(keys[i], 'in', value)
+            } else if (keys[i] === 'ngaySuDung') {
+                const startTime = values.ngaySuDung?.startTime
+                const endTime = values.ngaySuDung?.endTime
+                // const modifiedStartTime = firebase.firestore.Timestamp.fromDate()
+                // const modifiedEndTime = firebase.firestore.Timestamp.fromDate(new DataView(endTime))
+                query = query.where('ngaySuDung', '>=', startTime)
+
+                query = query.where('ngaySuDung', '<=', endTime)
+            } else {
+                query = query.where(keys[i], '==', value)
+            }
+        }
+        // for (const key in values) {
+        //     console.log('key', key)
+        //     const value = values[key as keyof FilterTicket]
+        //     if (value === "") {
+        //         continue;
+        //     } else if (key === 'congCheckInId') {
+        //         query = query.where(key, 'in', value)
+        //     } else if (key === 'ngaySuDung') {
+        //         const startTime = values.ngaySuDung?.startTime
+        //         const endTime = values.ngaySuDung?.endTime
+        //         // const modifiedStartTime = firebase.firestore.Timestamp.fromDate()
+        //         // const modifiedEndTime = firebase.firestore.Timestamp.fromDate(new DataView(endTime))
+        //         query = query.where('ngaySuDung', '>=', startTime)
+
+        //         query = query.where('ngaySuDung', '<=', endTime)
+        //     } else {
+        //         query = query.where(key, '==', value)
+        //     }
+    
         return query.get().then((data: any) => {
-            const lst: any = [];
-            data.forEach((doc: any) => {
-                lst.push({ ...doc.data(), docId: doc.id })
-            })
-            return lst
-        }).catch((error: any) => {
-            console.log(error)
+
+        const lst: any = [];
+        data.forEach((doc: any) => {
+            lst.push({ ...doc.data(), docId: doc.id })
         })
+        return lst
+    }).catch((error: any) => {
+        console.log('có gì đó sai sai ởi đây')
+        console.log(error)
+    })
 
 
 
@@ -86,28 +111,85 @@ export class BaseService {
     }
 
 
-    update(collectionName: string, values: any, docId: string) {
-        return db.collection(collectionName).doc(docId).update({ ...values }).then(() => {
+
+update(collectionName: string, values: any, docId: string) {
+    console.log('values dc update', values)
+    return db.collection(collectionName).doc(docId).update({ ...values }).then(() => {
+        return {
+            status: 200,
+            message: 'cập nhật thành công'
+        }
+    }).catch((error) => {
+        return {
+            status: 500
+        }
+    })
+}
+
+updateTicketPack({ docId, ...resParam }: TicketPack) {
+    return this.update('danhSachGoi', resParam, docId);
+
+}
+updateTicketList({ docId, ...resParams }: TicketList) {
+    return this.update('danhSahVe', resParams, docId)
+}
+
+generateDocId(length ?: number) {
+    let text = '';
+    const POSSIBLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+    if (length) {
+        for (let i = 0; i < length; i++) {
+            text += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length))
+        }
+    } else {
+        for (let i = 0; i < 24; i++) {
+            text += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length))
+        }
+    }
+
+    return text
+}
+generateId(length ?: number) {
+    const ID = 'ALTA'
+    let text = ''
+    const POSSIBLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    if (length) {
+        for (let i = 0; i < length; i++) {
+            text += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length))
+        }
+    } else {
+        for (let i = 0; i < 6; i++) {
+            text += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length))
+        }
+    }
+    return ID + text
+}
+
+
+add(collectionName: string, values: any, keyName: string) {
+
+    const docId = this.generateId() // document id
+    const id = this.generateId()
+    const maSuKien = 'CEC2021'
+    const tenSuKien = 'hội nghị triển lãm tiêu dùng  2022'
+    return db.collection(collectionName).doc(docId).set({ ...values, [keyName]: id, maSuKien, tenSuKien })
+        .then(() => {
             return {
                 status: 200,
-                message: 'cập nhật thành công'
+                message: 'thêm thành công'
             }
-        }).catch((error) => {
+        }).catch(error => {
             return {
-                status: 500
+                status: 500,
+                message: 'fail'
             }
         })
-    }
+}
 
-    updateTicketPack({ docId, ...resParam }: TicketPack) {
-        return this.update('danhSachGoi', resParam, docId);
-
-    }
-    updateTicketList({ docId, ...resParams }: TicketList) {
-        return this.update('danhSahVe', resParams, docId)
-    }
-
-
+addTicketPack(values: any) {
+    return this.add('danhSachGoi', values, 'maGoi')
+}
 
 
 }

@@ -5,9 +5,9 @@ export const calendarHiddenActionCreator = (visible: boolean)=>{
             payload: visible
         }
 }
-export const getSelectedDateActionCreator = (date:Date)=>{
+export const getSelectedDateActionCreator = (date:Date, name: string)=>{
     return {
         type: CalendarType.SET_DATE,
-        payload: date
+        payload: {date,name}
     }
 }

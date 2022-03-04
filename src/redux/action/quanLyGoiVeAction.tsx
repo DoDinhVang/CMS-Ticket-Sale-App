@@ -21,4 +21,5 @@ interface showAddTicketPackModal{
 
 
 
+
 export type TickPackManagerAction = getTicketPackList | ShowUpdateModal | GetInfoTicketPack | showAddTicketPackModal

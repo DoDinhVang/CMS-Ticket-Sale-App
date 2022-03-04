@@ -2,7 +2,8 @@ import { CalendarAction } from "../action/CalendarAction"
 import { CalendarType } from "../types/CalendarType"
 
 const initialState = {
-    date: new Date()
+    date: new Date(),
+    name: ''
 }
 
 const calendarReducer = (state = initialState, action: CalendarAction) => {
@@ -10,7 +11,7 @@ const calendarReducer = (state = initialState, action: CalendarAction) => {
 
         case CalendarType.SET_DATE:
             console.log('selectedate', action.payload)
-            return {...state, date: action.payload}
+            return {...state, date: action.payload.date, name: action.payload.name}
 
         default:
             return { ...state }

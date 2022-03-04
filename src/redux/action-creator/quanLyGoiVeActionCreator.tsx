@@ -63,3 +63,17 @@ export const updateTicketPackActionCreator = (values: TicketPack) => {
     }
 
 }
+export const addTicketPackActionCreator = (values:any)=>{
+    console.log('values them', values)
+    return async (dispatch: Dispatch<any>)=>{
+        try {
+            const {status} = await baseService.addTicketPack(values)
+            if(status === STATUS_CODE.SUCCESS){
+                dispatch(getTicketPackListActionCreator())
+            }
+            
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+}

@@ -5,6 +5,9 @@ interface CalendarHidden{
 }
 interface SelectedDate{
     type: CalendarType.SET_DATE,
-    payload: Date
+    payload: {
+        date: Date,
+        name: string
+    }
 }
 export type CalendarAction = CalendarHidden | SelectedDate

@@ -4,7 +4,6 @@ import { Modal, Radio, Checkbox, Row, Col } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../../redux/configStore';
 import { modalVisibleActionCreator } from '../../redux/action-creator/modalFilterTicketActionCreator';
-import { DatePicker } from 'antd';
 import { CHUA_SU_DUNG, DA_SU_DUNG, HET_HAN } from '../../util/config';
 import { filterTickerActionCreator, getCheckInGateListActionCreator } from '../../redux/action-creator/quanLyVeActionCreator';
 import { CheckInGate } from '../../model/quanlyve/CheckInGate';
@@ -13,13 +12,13 @@ import { useFormik } from 'formik';
 import firebase from 'firebase';
 import moment from 'moment';
 import { toNamespacedPath } from 'node:path/posix';
-import MyDatePicker from '../MyDatePicker';
+import Calendar from '../Calendar';
 
 export default function ModalFilterTicket() {
 
   const { modalVisible } = useSelector((state: State) => state.modalFilterTicketReducer)
   const { checkInGateList } = useSelector((state: State) => state.quanLyVeReducer);
-  const {date} = useSelector((state:State)=>state.calendarReducer)
+  const { date,name} = useSelector((state: State) => state.calendarReducer)
   const dispatch = useDispatch();
 
   const initialValues: FilterTicket = {};
@@ -32,19 +31,7 @@ export default function ModalFilterTicket() {
     },
   });
 
-  const onChange = (name: string) => { // ngày sử dụng vé
-
-    return (value: any) => {
-
-      const modifiedDate = {
-        ...formik.values.ngaySuDung,
-        [name]: new Date(moment(value).format())
-
-      }
-      formik.setFieldValue(`ngaySuDung`, modifiedDate)
-    }
-  }
-
+ 
 
   const [disableCheckBox, setDisableCheckBox] = useState(false)
 
@@ -101,11 +88,13 @@ export default function ModalFilterTicket() {
             <div style={{ marginRight: '130px' }}>
               <p className='text-title'>Từ ngày</p>
               {/* <DatePicker format='DD/MM/YYYY' style={{ borderRadius: '8px' }} onChange={onChange('startTime')} /> */}
-              <MyDatePicker calendarHidden = {true} date = {date}></MyDatePicker>
+              {/* <MyDatePicker></MyDatePicker> */}
+              <Calendar value = {formik.values.ngaySuDung?.startTime} feature = 'filter' name = 'startTime' formik = {formik}></Calendar>
             </div>
             <div >
               <p className='text-title'>Đến ngày</p>
-              <MyDatePicker calendarHidden = {true} date = {date} ></MyDatePicker>
+              <Calendar value = {formik.values.ngaySuDung?.endTime} feature = 'filter' name = 'endTime' formik = {formik}></Calendar>
+              {/* <MyDatePicker></MyDatePicker> */}
               {/* <DatePicker format='DD/MM/YYYY' style={{ borderRadius: '8px' }} onChange={onChange(`endTime`)} /> */}
             </div>
           </div>

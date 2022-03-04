@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, ReactComponentElement, ReactElement } from 'react'
 import { useState, useEffect } from 'react';
 import moment, { months } from 'moment';
 import { Frame, Header, PrevAndNexButton, Body, Day } from '../styled-components/Calender';
@@ -8,16 +8,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../redux/configStore';
 import { calendarHiddenActionCreator, getSelectedDateActionCreator } from '../redux/action-creator/CalendarActionCreator'
 import { modalVisibleActionCreator } from '../redux/action-creator/modalFilterTicketActionCreator';
-// interface calendarHidden{
-//     calendarHidden: boolean
-// }
+import { Input } from 'antd'
+import { CalendarOutlined } from '@ant-design/icons';
+import '../sass/Componens/datePicker.scss'
+import { type } from 'os';
 export default function Calendar(props: any) {
-    let { calendarHidden } = props;
-    
+    // let { calendarHidden } = props;
+    const { name, formik, feature, handleDatePicker, value } = props;
+    console.log('loại dữ liệu', typeof value)
+    const [calenHidden, setCalenHidden] = useState(true)
 
-    const [calHidden, setCalHidden] = useState(true)
-
-    // const { calendarHidden } = useSelector((state: State) => state.calendarReducer)
     const dispatch = useDispatch()
     const DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     const DAYS_LEAP = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -29,7 +29,7 @@ export default function Calendar(props: any) {
     const [day, setDay] = useState(date.getDate())
     const [month, setMonth] = useState(date.getMonth())
     const [year, setYear] = useState(date.getFullYear())
-    console.log('date', date)
+    console.log('date', moment(date).format('DD/MM/YYYY'))
     // the first day of the month
     const getStartDayOfMonth = (date: Date) => {
         const startDate = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
@@ -47,90 +47,148 @@ export default function Calendar(props: any) {
         setMonth(date.getMonth());
         setYear(date.getFullYear());
         setStartDay(getStartDayOfMonth(date));
-        dispatch(getSelectedDateActionCreator(date))
+        dispatch(getSelectedDateActionCreator(date, name))
+
+        // dispatch(calendarHiddenActionCreator(true))
+        dispatch(getSelectedDateActionCreator(date, name))
+        // dispatch(modalVisibleActionCreator(false))
+
+        if (feature === 'filter') {
+            if (typeof value === 'undefined') {
+            } else {
+                const modifiedDate = {
+                    ...formik.values.ngaySuDung,
+                    [name]: new Date(moment(date).format())
+
+                }
+                formik.setFieldValue(`ngaySuDung`, modifiedDate)
+            }
+
+
+        } else if (feature === 'update') {
+            if (value !== undefined) {
+                console.log('vào đấy')
+                handleDatePicker(name, value, date)
+            }
+        } else if (feature === 'add') {
+            // console.log('value add', value)
+            // handleDatePicker(name, value, date)
+            if (typeof value === 'undefined') {
+                console.log('field', name)
+                handleDatePicker(name, date, date)
+            } else {
+                handleDatePicker(name, value, date)
+            }
+
+        }
 
     }, [date]);
-    useEffect(()=>{
-        setCalHidden(calendarHidden)
-        calendarHidden = true
-    },[calendarHidden])
+
     const handleChangeRadioAnt = (e: any) => {
         const { value } = e.target;
         setRadioValue(value)
     }
-    console.log('callh', calHidden)
-
+    let inputValue: any = date;
+    if (feature === 'filter') {
+        if (moment(inputValue).format('DD/MM/YYY') === moment(new Date()).format('DD/MM/YYY')) {
+            inputValue = '';
+        } else {
+            inputValue = moment(date).format('DD/MM/YYYY')
+        }
+    } else if (feature === 'update') {
+        inputValue = moment(value).format('DD/MM/YYYY')
+    } else if (feature === 'add') {
+        if (moment(inputValue).format('DD/MM/YYY') === moment(new Date()).format('DD/MM/YYY')) {
+            inputValue = '';
+        } else {
+            inputValue = moment(date).format('DD/MM/YYYY')
+        }
+    }
     return (
-        <Frame calendarHidden={calHidden}>
-            <Header>
+        <div className='datePicker--ver--0'>
+            <Input defaultValue='' value={inputValue} className='h-full w-full' style={{ paddingLeft: '8px', borderRadius: '8px' }}></Input>
+            <div className='icons'>
+                <CalendarOutlined onClick={() => {
+                    if (calenHidden) {
+                        setCalenHidden(false)
+                    } else {
+                        setCalenHidden(true)
+                    }
+                }} />
+            </div>
+            <Frame calendarHidden={calenHidden}>
+                <Header>
 
-                <LeftOutlined onClick={() => setDate(new Date(year, month - 1, day))} />
-                <div className='px-2'>
-                    {MONTHS[month]}, {year}
-                </div>
-                <RightOutlined onClick={() => setDate(new Date(year, month + 1, day))} />
+                    <LeftOutlined onClick={() => setDate(new Date(year, month - 1, day))} />
+                    <div className='px-2'>
+                        {MONTHS[month]}, {year}
+                    </div>
+                    <RightOutlined onClick={() => setDate(new Date(year, month + 1, day))} />
 
-            </Header>
-            <Radio.Group defaultValue='month' value={radioValue} onChange={handleChangeRadioAnt} style={{ display: 'flex', justifyContent: 'space-around', padding: '8px 0' }} className='w-full items-center'>
-                <Radio value='month' style={{ fontSize: '14px', fontWeight: '500', color: '#1E0D03' }}>Theo tháng</Radio>
-                <Radio value='week' style={{ fontSize: '14px', fontWeight: '500', color: '#1E0D03' }}>Theo tuần</Radio>
-            </Radio.Group>
+                </Header>
+                <Radio.Group defaultValue='month' value={radioValue} onChange={handleChangeRadioAnt} style={{ display: 'flex', justifyContent: 'space-around', padding: '8px 0' }} className='w-full items-center'>
+                    <Radio value='month' style={{ fontSize: '14px', fontWeight: '500', color: '#1E0D03' }}>Theo tháng</Radio>
+                    <Radio value='week' style={{ fontSize: '14px', fontWeight: '500', color: '#1E0D03' }}>Theo tuần</Radio>
+                </Radio.Group>
 
-            <Body>
-                {DAYS_OF_THE_WEEK.map((d) => (
-                    <Day key={d}>
-                        <p style={{ color: "#C55E00" }} className='mb-0 text-lg font-semibold'>{d}</p>
-                    </Day>
-                ))}
+                <Body>
+                    {DAYS_OF_THE_WEEK.map((d) => (
+                        <Day key={d}>
+                            <p style={{ color: "#C55E00" }} className='mb-0 text-lg font-semibold'>{d}</p>
+                        </Day>
+                    ))}
 
-                {Array(35)
-                    .fill(null)
-                    .map((_, index) => {
-                        console.log('startDay', startDay)
-                        const d = index - (startDay - 2);
-                        let daysOfThePrevMonth: number;
-                        console.log('month', month)
-                        if (month === 0) {
-                            daysOfThePrevMonth = days[11]
-                            console.log('ngày của tháng', daysOfThePrevMonth)
+                    {Array(35)
+                        .fill(null)
+                        .map((_, index) => {
+                            console.log('startDay', startDay)
+                            const d = index - (startDay - 2);
+                            let daysOfThePrevMonth: number;
+                            console.log('month', month)
+                            if (month === 0) {
+                                daysOfThePrevMonth = days[11]
+                                console.log('ngày của tháng', daysOfThePrevMonth)
 
-                        } else {
-                            daysOfThePrevMonth = days[month - 1]
-                        }
+                            } else {
+                                daysOfThePrevMonth = days[month - 1]
+                            }
 
-                        let content: any;
+                            let content: ReactElement;
 
-                        if (d > 0 && d <= days[month]) {
-                            content = <button type = 'button' style={{ borderRadius: '100%' }} className='mb-0 text-center h-ful w-full'>{d}</button>
-                        } else if (d > days[month]) {
-                            content = <button type = 'button' disabled style={{ borderRadius: '100%', color: '#23221F', opacity: '0.3', cursor: 'not-allowed' }} className='mb-0 text-center h-ful w-full'>{d - days[month]}</button>
+                            if (d > 0 && d <= days[month]) {
+                                content = <button type='button' style={{ borderRadius: '100%' }} className='mb-0 text-center h-ful w-full'>{d}</button>
+                            } else if (d > days[month]) {
+                                content = <button type='button' disabled style={{ borderRadius: '100%', color: '#23221F', opacity: '0.3', cursor: 'not-allowed' }} className='mb-0 text-center h-ful w-full'>{d - days[month]}</button>
 
-                        } else {
-                            content = <button type='button' disabled style={{ borderRadius: '100%', color: '#23221F', opacity: '0.3', cursor: 'not-allowed' }} className='mb-0 text-center h-ful w-full'>{daysOfThePrevMonth + d}</button>
+                            } else {
+                                content = <button type='button' disabled style={{ borderRadius: '100%', color: '#23221F', opacity: '0.3', cursor: 'not-allowed' }} className='mb-0 text-center h-ful w-full'>{daysOfThePrevMonth + d}</button>
 
-                        }
-                        console.log('ddds', d)
-                        return (
-                            <Day
-                                key={index}
-                                isToday={d === today.getDate()}
-                                isSelected={d === day}
-                                onClick={() => {
-                                    console.log('hello')
-                                    setDate(new Date(year, month, d))
-                                    setCalHidden(true)
+                            }
+                            console.log('ddds', d)
+                            return (
+                                <Day
+                                    key={index}
+                                    isToday={d === today.getDate()}
+                                    isSelected={d === day}
+                                    onClick={() => {
+                                        setDate(new Date(year, month, d))
+                                        setCalenHidden(true)
+                                        const modifiedDate = {
+                                            ...formik.values.ngaySuDung,
+                                            [name]: new Date(moment(date).format())
 
-                                    // dispatch(calendarHiddenActionCreator(true))
-                                    dispatch(getSelectedDateActionCreator(date))
-                                    // dispatch(modalVisibleActionCreator(false))
-                                }}
-                            >
-                                {content}
-                            </Day>
-                        );
-                    })}
+                                        }
+                                        formik.setFieldValue(`ngaySuDung`, modifiedDate)
 
-            </Body>
-        </Frame>
+                                    }}
+                                >
+                                    {content}
+                                </Day>
+                            );
+                        })}
+
+                </Body>
+            </Frame>
+        </div>
     )
 }

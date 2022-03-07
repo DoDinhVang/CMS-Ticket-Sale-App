@@ -5,13 +5,11 @@ import { searchByTicketNumberActionCreator } from '../redux/action-creator/quanL
 export default function InputSearch(props: any) {
 
     const dispatch = useDispatch()
-    const { placeholder } = props
-    return <div className='input-group flex'>
-        <input className='input-control italic' placeholder={placeholder} onChange={(e) => {
+    const { placeholder, size } = props
+    return <div className= {`input-group-${size}`}>
+        <input className= {`input-control-${size}`} placeholder={placeholder} onChange={(e) => {
 
             dispatch(searchByTicketNumberActionCreator(e.target.value))
-
-
         }}></input>
         <SearchOutlined className='icon-control' />
     </div>

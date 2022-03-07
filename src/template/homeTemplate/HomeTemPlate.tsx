@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 import { Layout, Menu, Avatar, Input } from 'antd';
-import { MailOutlined, BellOutlined } from '@ant-design/icons';
+import { MailOutlined, BellOutlined,HomeOutlined,SettingOutlined} from '@ant-design/icons';
 import history from '../../util/history';
 import InputSearch from '../../component/InputSearch';
 import { useEffect } from 'react';
@@ -20,19 +20,19 @@ type homTemplateProps = {
 
 
 export default function HomeTemPlate(props: homTemplateProps) {
-    const { Component,background,padding, ...resParams } = props
-    useEffect(() => { 
-        
+    const { Component, background, padding, title, ...resParams } = props
+    useEffect(() => {
+
     }, [])
     return (
 
         <Route {...resParams} render={(propRoute) => {
             return <div className='relative h-screen'>
                 {/* navbar */}
-               
+
                 <Layout id='myNavBar'>
                     <Sider
-                        breakpoint="lg"
+                        breakpoint="md"
                         collapsedWidth="0"
                         onBreakpoint={broken => {
                             console.log(broken);
@@ -45,7 +45,7 @@ export default function HomeTemPlate(props: homTemplateProps) {
                             <img style={{ height: '58px', width: '133px' }} src={require('../../assets/img/insight-logo.png')} alt='insight-logo_img'></img>
                         </div>
                         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                            <Menu.Item key="1" icon={<i className="fa fa-home"></i>} onClick={() => {
+                            <Menu.Item key="1" icon={<HomeOutlined/>} onClick={() => {
                                 history.push('/trangchu')
                             }}>
                                 Trang chủ
@@ -55,42 +55,41 @@ export default function HomeTemPlate(props: homTemplateProps) {
                             }} icon={<i className="fa fa-ticket-alt"></i>}>
                                 Quản lý vé
                             </Menu.Item>
+                            
                             <Menu.Item key="3" onClick={() => {
                                 history.push('/doisoatve')
                             }} icon={<i className="fa fa-money-check-alt"></i>}>
-                                Đổi soát vé
+                                Đối soát vé
                             </Menu.Item>
                             <Menu.Item key="4" onClick={() => {
                                 history.push('/caiDat')
-                            }} icon={<i className="fa fa-cog"></i>}>
-                               Cài đặt
+                            }} icon={<SettingOutlined />}>
+                                Cài đặt
                             </Menu.Item>
-                            <Menu.Item style = {{marginLeft: '20px'}} key="5" onClick={() => {
+                            <Menu.Item style={{ marginLeft: '20px' }} key="5" onClick={() => {
                                 history.push('/caiDat')
                             }}>
-                              Gói dịch vụ
+                                Gói dịch vụ
                             </Menu.Item>
-                           
+
                         </Menu>
                     </Sider>
                     <Layout style={{ background: background }}>
                         <Header className="site-layout-sub-header-background" style={{ padding: 0 }} >
-                            <div className='flex justify-between' id='myHeader'>
-                                {/* input search */}
-                                <InputSearch placeholder='Search' />
-
+                            <div className='flex justify-between flex-row-reverse' id='myHeader'>
                                 {/* intro */}
                                 <div className='flex items-center'>
                                     <MailOutlined className='cursor-pointer ' style={{ height: '7px', width: '20px' }} />
                                     <BellOutlined className='cursor-pointer' style={{ height: '7px', width: '20px', margin: "0 29px" }} />
                                     <Avatar className='cursor-pointer' style={{ backgroundColor: '#87d068' }} icon={<img className='rounded' style={{ height: '48px', width: '48px' }} src='https://picsum.photos/48/48' alt='avatar_img'></img>} />
                                 </div>
+                                {/* input search */}
+                                {title === 'Danh Sách gói vé' ? '' : <InputSearch size='base' placeholder='Tìm kiếm bằng số vé'></InputSearch>}
 
                             </div>
                         </Header>
                         <Content>
                             <div className="site-layout-background" style={{ padding: padding, minHeight: 360, background: background }}>
-                                
                                 <Component {...propRoute}></Component>
                             </div>
                         </Content>

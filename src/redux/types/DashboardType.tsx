@@ -1,0 +1,5 @@
+export enum DashboardType {
+    GET_REVENUE = ' GET_REVENUE',
+    GET_REVENUE_BY_MONTH = 'GET_REVENUE_BY_MONTH',
+    GET_REVENUE_BY_WEEK = 'GET_REVENUE_BY_WEEK'
+}

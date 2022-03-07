@@ -1,9 +1,9 @@
-import React, { Component, ReactComponentElement, ReactElement } from 'react'
+import React, { Component, ReactComponentElement, ReactElement, useRef } from 'react'
 import { useState, useEffect } from 'react';
 import moment, { months } from 'moment';
 import { Frame, Header, PrevAndNexButton, Body, Day } from '../styled-components/Calender';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Radio } from 'antd';
+import { DatePicker, Radio } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { State } from '../redux/configStore';
 import { calendarHiddenActionCreator, getSelectedDateActionCreator } from '../redux/action-creator/CalendarActionCreator'
@@ -12,10 +12,11 @@ import { Input } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons';
 import '../sass/Componens/datePicker.scss'
 import { type } from 'os';
+import { getRevenueActionCreator, getRevenueDataByWeekActionCreator } from '../redux/action-creator/dashboardActionCreator';
+import { isBuffer } from 'util';
 export default function Calendar(props: any) {
     // let { calendarHidden } = props;
     const { name, formik, feature, handleDatePicker, value } = props;
-    console.log('loại dữ liệu', typeof value)
     const [calenHidden, setCalenHidden] = useState(true)
 
     const dispatch = useDispatch()
@@ -25,6 +26,7 @@ export default function Calendar(props: any) {
     const MONTHS = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8',
         'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
     const today = new Date()
+    const [inputValue, setInputValue] = useState('');
     const [date, setDate] = useState(today)
     const [day, setDay] = useState(date.getDate())
     const [month, setMonth] = useState(date.getMonth())
@@ -33,15 +35,18 @@ export default function Calendar(props: any) {
     // the first day of the month
     const getStartDayOfMonth = (date: Date) => {
         const startDate = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+
         return startDate === 0 ? 7 : startDate;
     }
-    const [startDay, setStartDay] = useState(getStartDayOfMonth(date))
     const isLeapYear = (year: number) => {
         return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
     }
 
+    const [startDay, setStartDay] = useState(getStartDayOfMonth(date))
     const [radioValue, setRadioValue] = useState('month')
     const days = isLeapYear(year) ? DAYS_LEAP : DAYS
+
+    console.log('startDayOfMonth', startDay)
     useEffect(() => { // compoentDidUdate
         setDay(date.getDate());
         setMonth(date.getMonth());
@@ -51,11 +56,10 @@ export default function Calendar(props: any) {
 
         // dispatch(calendarHiddenActionCreator(true))
         dispatch(getSelectedDateActionCreator(date, name))
-        // dispatch(modalVisibleActionCreator(false))
-
         if (feature === 'filter') {
             if (typeof value === 'undefined') {
             } else {
+                setInputValue(moment(date).format('DD/MM/YYYY'))
                 const modifiedDate = {
                     ...formik.values.ngaySuDung,
                     [name]: new Date(moment(date).format())
@@ -63,57 +67,73 @@ export default function Calendar(props: any) {
                 }
                 formik.setFieldValue(`ngaySuDung`, modifiedDate)
             }
-
-
         } else if (feature === 'update') {
             if (value !== undefined) {
-                console.log('vào đấy')
+                setInputValue(moment(value).format('DD/MM/YYYY'))
                 handleDatePicker(name, value, date)
             }
         } else if (feature === 'add') {
-            // console.log('value add', value)
-            // handleDatePicker(name, value, date)
             if (typeof value === 'undefined') {
-                console.log('field', name)
                 handleDatePicker(name, date, date)
+
             } else {
+                setInputValue(moment(date).format('DD/MM/YYYY'))
                 handleDatePicker(name, value, date)
             }
 
+        } else if (feature === 'logistics') {
+            setInputValue(moment(date).format('[Tháng] MM,YYYY'))
+            if (radioValue === 'month') {
+                dispatch(getRevenueActionCreator(date.getMonth(), date.getFullYear()))
+            } else if (radioValue === 'week') {
+
+                const startOfWeek = 7 * Math.floor(day / 7)
+                const endOfWeek = 7 * Math.floor(day / 7) + 6
+                const modifiedStartOfWeek = moment(new Date(year, month, startOfWeek)).format()
+                const modifiedEndOfWeek = moment(new Date(year, month, endOfWeek)).format()
+                console.log('startofweek', startOfWeek)
+                dispatch(getRevenueDataByWeekActionCreator(modifiedStartOfWeek, modifiedEndOfWeek))
+            }
         }
 
-    }, [date]);
+    }, [date, day]);
+
+    useEffect(() => {
+        if (feature === 'update') {
+            setInputValue(moment(value).format('DD/MM/YYYY'))
+        }
+    }, [value])
+
+    const ref = useRef<any>();
+    useEffect(() => {
+        const checkIfClickedOutside = (e: any) => {
+
+            if (!calenHidden && ref.current && !ref.current.contains(e.target)) {
+                setCalenHidden(true)
+            }
+        }
+
+        document.addEventListener("mousedown", checkIfClickedOutside)
+
+        return () => {
+            document.removeEventListener("mousedown", checkIfClickedOutside)
+        }
+    }, [calenHidden])
 
     const handleChangeRadioAnt = (e: any) => {
         const { value } = e.target;
         setRadioValue(value)
+
     }
-    let inputValue: any = date;
-    if (feature === 'filter') {
-        if (moment(inputValue).format('DD/MM/YYY') === moment(new Date()).format('DD/MM/YYY')) {
-            inputValue = '';
-        } else {
-            inputValue = moment(date).format('DD/MM/YYYY')
-        }
-    } else if (feature === 'update') {
-        inputValue = moment(value).format('DD/MM/YYYY')
-    } else if (feature === 'add') {
-        if (moment(inputValue).format('DD/MM/YYY') === moment(new Date()).format('DD/MM/YYY')) {
-            inputValue = '';
-        } else {
-            inputValue = moment(date).format('DD/MM/YYYY')
-        }
-    }
+
     return (
-        <div className='datePicker--ver--0'>
-            <Input defaultValue='' value={inputValue} className='h-full w-full' style={{ paddingLeft: '8px', borderRadius: '8px' }}></Input>
+        <div ref={ref} className='datePicker--ver--0'>
+            <Input onFocus={() => {
+                setCalenHidden(false)
+            }} defaultValue='' value={inputValue} className='h-full w-full' style={{ paddingLeft: '8px', borderRadius: '8px' }}></Input>
             <div className='icons'>
                 <CalendarOutlined onClick={() => {
-                    if (calenHidden) {
-                        setCalenHidden(false)
-                    } else {
-                        setCalenHidden(true)
-                    }
+                    setCalenHidden(oldSate => !oldSate)
                 }} />
             </div>
             <Frame calendarHidden={calenHidden}>
@@ -137,55 +157,115 @@ export default function Calendar(props: any) {
                             <p style={{ color: "#C55E00" }} className='mb-0 text-lg font-semibold'>{d}</p>
                         </Day>
                     ))}
+                    {
+                        Array(35)
+                            .fill(null)
+                            .map((_, index) => {
 
-                    {Array(35)
-                        .fill(null)
-                        .map((_, index) => {
-                            console.log('startDay', startDay)
-                            const d = index - (startDay - 2);
-                            let daysOfThePrevMonth: number;
-                            console.log('month', month)
-                            if (month === 0) {
-                                daysOfThePrevMonth = days[11]
-                                console.log('ngày của tháng', daysOfThePrevMonth)
+                                const d = index - (startDay - 2);
 
-                            } else {
-                                daysOfThePrevMonth = days[month - 1]
-                            }
+                                let daysOfThePrevMonth: number;
+                                console.log('d', d)
 
-                            let content: ReactElement;
+                                if (month === 0) {
+                                    daysOfThePrevMonth = days[11]
+                                    console.log('ngày của tháng', daysOfThePrevMonth)
 
-                            if (d > 0 && d <= days[month]) {
-                                content = <button type='button' style={{ borderRadius: '100%' }} className='mb-0 text-center h-ful w-full'>{d}</button>
-                            } else if (d > days[month]) {
-                                content = <button type='button' disabled style={{ borderRadius: '100%', color: '#23221F', opacity: '0.3', cursor: 'not-allowed' }} className='mb-0 text-center h-ful w-full'>{d - days[month]}</button>
+                                } else {
+                                    daysOfThePrevMonth = days[month - 1]
+                                }
 
-                            } else {
-                                content = <button type='button' disabled style={{ borderRadius: '100%', color: '#23221F', opacity: '0.3', cursor: 'not-allowed' }} className='mb-0 text-center h-ful w-full'>{daysOfThePrevMonth + d}</button>
+                                let content: ReactElement;
 
-                            }
-                            console.log('ddds', d)
-                            return (
-                                <Day
-                                    key={index}
-                                    isToday={d === today.getDate()}
-                                    isSelected={d === day}
-                                    onClick={() => {
-                                        setDate(new Date(year, month, d))
-                                        setCalenHidden(true)
-                                        const modifiedDate = {
-                                            ...formik.values.ngaySuDung,
-                                            [name]: new Date(moment(date).format())
+                                if (d > 0 && d <= days[month]) {
+                                    content = <button type='button' style={{ borderRadius: '100%' }} className='mb-0 text-center h-full w-full'>{d}</button>
+                                } else if (d > days[month]) {
+                                    content = <button type='button' style={{ borderRadius: '100%', color: '#23221F', opacity: '0.3', cursor: 'not-allowed' }} className='mb-0 text-center h-full w-full'>{d - days[month]}</button>
 
-                                        }
-                                        formik.setFieldValue(`ngaySuDung`, modifiedDate)
+                                } else {
+                                    content = <button type='button' style={{ borderRadius: '100%', color: '#23221F', opacity: '0.3', cursor: 'not-allowed' }} className='mb-0 text-center h-full w-full'>{daysOfThePrevMonth + d}</button>
 
-                                    }}
-                                >
-                                    {content}
-                                </Day>
-                            );
-                        })}
+                                }
+
+
+                                if (radioValue === 'month') {
+                                    return (
+                                        <Day
+                                            key={index}
+                                            isToday={d === today.getDate()}
+                                            isStartOfWeek={false}
+                                            isEndOfWeek={false}
+                                            isSelected={d === day}
+                                            onClick={() => {
+                                                setDate(new Date(year, month, d))
+                                                setCalenHidden(true)
+                                                if (feature === 'filter') {
+                                                    const modifiedDate = {
+                                                        ...formik.values.ngaySuDung,
+                                                        [name]: new Date(moment(date).format())
+
+                                                    }
+                                                    formik.setFieldValue(`ngaySuDung`, modifiedDate)
+                                                }
+
+                                            }}
+                                        >
+                                            {content}
+                                        </Day>
+                                    );
+                                } else {
+                                    console.log('daybyday', day)
+                                    const startOfWeek = 7 * Math.floor(day / 7)
+                                    const endOfWeek = 7 * Math.floor(day / 7) + 6
+                                    let selector = ''
+                                    // console.log('startofweek', startOfWeek, index, day, t.count)
+                                    if (index > startOfWeek && index < endOfWeek) {
+                                        selector = 'between'
+
+                                    } else if (index === startOfWeek) {
+                                        console.log('index', index)
+                                        selector = 'between first'
+                                    } else if (index === endOfWeek) {
+                                        selector = 'between end'
+                                    }
+                                    else {
+                                        selector = ''
+                                    }
+                                    return (
+                                        <Day
+                                            key={index}
+                                            isStartOfWeek={index === startOfWeek}
+                                            isEndOfWeek={index === endOfWeek}
+                                            startOfWeek={startOfWeek}
+                                            endOfWeek={endOfWeek}
+                                            className={selector}
+                                            onClick={() => {
+                                                setDate(new Date(year, month, d))
+                                                setCalenHidden(true)
+                                                if (feature === 'filter') {
+                                                    const modifiedDate = {
+                                                        ...formik.values.ngaySuDung,
+                                                        [name]: new Date(moment(date).format())
+
+                                                    }
+                                                    formik.setFieldValue(`ngaySuDung`, modifiedDate)
+                                                }
+
+
+                                            }}
+                                        // onMouseEnter={(props) => {
+                                        //     setDate(new Date(year, month, d))
+                                        // }}
+
+                                        >
+                                            {content}
+                                        </Day>
+                                    );
+                                }
+
+                            })
+                    }
+
 
                 </Body>
             </Frame>

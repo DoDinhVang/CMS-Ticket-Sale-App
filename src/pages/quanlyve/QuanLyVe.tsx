@@ -9,6 +9,9 @@ import { State } from '../../redux/configStore';
 import moment from 'moment';
 import { CHUA_SU_DUNG, DA_SU_DUNG, HET_HAN } from '../../util/config';
 import { modalVisibleActionCreator } from '../../redux/action-creator/modalFilterTicketActionCreator';
+import { Content } from 'antd/lib/layout/layout';
+import { TicketList } from '../../model/quanlyve/TicketList';
+import { downloadCSV } from '../../util/settings';
 export default function QuanLyVe() {
 
     const { ticketList } = useSelector((state: State) => state.quanLyVeReducer);
@@ -103,6 +106,18 @@ export default function QuanLyVe() {
     ];
 
     const data = lst;
+    const csvContent = lst.map((ele: TicketList, index: number) => {
+        return {
+          "STT": index,
+          "Booking Code": ele.bookingCode,
+          "So Ve": ele.soVe,
+          "Ten Su Kien": ele.tenSuKien,
+          "Tinh Trang Su Dung": ele.tinhTrangSuDung === DA_SU_DUNG? 'da su dung': ele.tinhTrangSuDung === CHUA_SU_DUNG?'chua su dung': 'het han',
+          "Ngay Su Dung": moment(ele.ngaySuDung.toDate()).format('DD/MM/YYYY'),
+          "Ngay Het Han": moment(ele.ngayHetHan.toDate()).format('DD/MM/YYYY'),
+          "Cong CheckIn": ele.congCheckIn
+        }
+      }) 
     return (
         <div id='quanLyVe'>
             <h1 className='font-black text-4xl mb-6' style={{ lineHeight: "54px", color: "#1E0D03" }}>Quản lý vé</h1>
@@ -127,7 +142,7 @@ export default function QuanLyVe() {
 
             <div className='flex justify-between items-center'>
                 {/* input search  */}
-                <InputSearch placeholder='Tìm bằng số vé'></InputSearch>
+                <InputSearch size = 'base' placeholder='Tìm bằng số vé'></InputSearch>
 
 
                 {/* filter ticket  and export file  */}
@@ -138,7 +153,9 @@ export default function QuanLyVe() {
                         <FilterOutlined />
                         <span style={{ marginLeft: '12px' }}>Lọc vé</span>
                     </button>
-                    <button className='button--white'>
+                    <button className='button--white' onClick={()=>{
+                        downloadCSV(csvContent)
+                    }}>
                         <span>Xuất file (.csv)</span>
                     </button>
                 </div>

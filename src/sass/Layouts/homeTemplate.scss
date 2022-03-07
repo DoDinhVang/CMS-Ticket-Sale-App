@@ -1,33 +1,4 @@
 
-/* input search  */
-.input-group{
-    display: flex;
-    align-items: center;
-    height: 48px;
-    width: 470px;
-    padding: 10px 16px 10px 16px;
-    border-radius: 12px;
-    background: #EDEDED;
-}
-.input-control{
-    width: 394px;
-    height: 28px;
-    background: #EDEDED;
-}
-input.input-control:focus{
-    outline: none;
-}
-.icon-control.anticon{
-   color: #1E0D03;
-   margin-left: 1rem;
-}
-.icon-control.anticon {
-    svg{
-        height: 24px;
-        width: 24px;
-    }
-}
-
 /* Content */
 .title{
     font-family: Montserrat;

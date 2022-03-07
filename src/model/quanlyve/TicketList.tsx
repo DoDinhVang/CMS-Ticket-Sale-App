@@ -3,5 +3,15 @@ export interface TicketList{
         maSuKien: string,
         tenSuKien: string,
         maGoi: string,
-        tenGoi: string
+        tenGoi: string,
+        bookingCode: string,
+        soVe: string,
+        tinhTrangSuDung:string,
+        ngaySuDung: any,
+        ngayHetHan: any,
+        congCheckIn: string,
+        tinhTrangDoiSoat:boolean
+
+
+
 }

@@ -11,11 +11,14 @@ import { filterTickerActionCreator, getTicketListActionCreator } from '../../red
 import { getEventListActionCreator } from '../../redux/action-creator/doiSoatVeActionCreator'
 import { Event } from '../../model/doiSoatVe/Events';
 import Calendar from '../../component/Calendar';
+import { TicketList } from '../../model/quanlyve/TicketList';
+import { downloadCSV } from '../../util/settings';
 
 export default function DoiSoatVe() {
 
-    const { ticketList } = useSelector((state: State) => state.quanLyVeReducer);
+    const { ticketList } = useSelector((state: State) => state.quanLyVeReducer)
     const { eventList } = useSelector((state: State) => state.checkTicketReducer)
+    const [visibleButton, setVisibleButton] = useState(false)
     const dispatch = useDispatch()
     const lst = ticketList.map((ve: any, index: number) => {
         return { ...ve, key: index }
@@ -78,7 +81,7 @@ export default function DoiSoatVe() {
 
     const initialValues: FilterTicket = {
         maSuKien: "CEC2021",
-        
+
     }
 
     const handleSelectChangeValue = (value: string) => {
@@ -97,6 +100,11 @@ export default function DoiSoatVe() {
 
     const handleRadioChangeValue = (e: RadioChangeEvent) => {
         const { value } = e.target
+        if (value) {
+            setVisibleButton(true)
+        } else {
+            setVisibleButton(false)
+        }
         setValue(value)
         formik.setFieldValue('tinhTrangDoiSoat', value)
 
@@ -107,12 +115,29 @@ export default function DoiSoatVe() {
         dispatch(getEventListActionCreator())
         dispatch(filterTickerActionCreator(initialValues))
     }, [])
+
+    const csvContent = lst.map((ele: TicketList, index: number) => {
+        return {
+          "STT": index,
+          "So Ve": ele.soVe,
+          "Ten Su Kien": ele.tenSuKien,
+          "Ngay Su Dung": moment(ele.ngaySuDung.toDate()).format('DD/MM/YYYY'),
+          "Ngay Het Han": moment(ele.ngayHetHan.toDate()).format('DD/MM/YYYY'),
+          "Cong CheckIn": ele.congCheckIn,
+          "Tinh Trang Doi Soat": ele.tinhTrangDoiSoat?'Da Doi Soat':"Chua Doi Soat"
+        }
+      }) 
     return (
         <div className='flex'>
-            <div className='mr-5 bg-white p-6 rounded-3xl'>
+            <div className='mr-5 bg-white p-6 rounded-3xl w-full'>
                 {/* input search */}
                 <h1 className='font-black text-4xl mb-6' style={{ lineHeight: "54px", color: "#1E0D03" }}>Đối soát vé</h1>
-                <InputSearch placeholder='Tìm bằng số vé'></InputSearch>
+                <div className='flex justify-between items-center'>
+                    <InputSearch size='small' placeholder='Tìm bằng số vé'></InputSearch>
+                    {visibleButton ? <button onClick={()=>{
+                        downloadCSV(csvContent)
+                    }} className='button--white'>Xuất file(.csv)</button> : <button className='button--orange'>Chốt đối soát</button>}
+                </div>
                 <Table className='mt-6 ' columns={columns} dataSource={data} pagination={{ position: ['bottomCenter'] }} />
             </div>
 
@@ -138,12 +163,12 @@ export default function DoiSoatVe() {
                     </div>
                     <div className='flex justify-between items-center mb-6'>
                         <p className='mb-0 font-semibold text-base'>từ ngày</p>
-                        <Calendar value = {formik.values.ngaySuDung?.startTime} feature = 'filter' name='startTime' formik={formik}></Calendar>
+                        <Calendar value={formik.values.ngaySuDung?.startTime} feature='filter' name='startTime' formik={formik}></Calendar>
 
                     </div>
                     <div className='flex justify-between items-center mb-6'>
                         <p className='mb-0 font-semibold text-base'>đến ngày</p>
-                        <Calendar value = {formik.values.ngaySuDung?.endTime} feature = 'filter' name='endTime' formik={formik}></Calendar>
+                        <Calendar value={formik.values.ngaySuDung?.endTime} feature='filter' name='endTime' formik={formik}></Calendar>
                     </div>
                     <div className='text-center'>
                         <button type='submit' className='button--white w-40 h-12'>Lọc</button>

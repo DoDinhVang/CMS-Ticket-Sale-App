@@ -138,16 +138,7 @@ export default function ModalFilterTicket() {
             </div>
           </div>
           <div className='text-center' style={{ marginTop: '30px' }}>
-            <button type='submit' style={{
-              padding: '11px 24px',
-              border: '1px solid #FF993C',
-              borderRadius: '8px',
-              fontSize: '18px',
-              fontWeight: 'bold',
-              color: '#FF993C',
-              lineHeight: "26px",
-              width: '160px',
-            }}>Lọc</button>
+            <button type='submit' className='button--white' style={{width: '160px'}}>Lọc</button>
           </div>
         </div>
       </form>

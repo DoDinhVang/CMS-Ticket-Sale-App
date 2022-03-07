@@ -87,35 +87,35 @@ export default function UpdateTicketPack() {
 
     return (
         <>
-            <Modal width={758} title="Cập nhật thông tin gói vé" visible={isUpdateModalVisible} onOk={handleOk} onCancel={handleCancel}>
+            <Modal width={570} title="Cập nhật thông tin gói vé" visible={isUpdateModalVisible} onOk={handleOk} onCancel={handleCancel}>
 
                 <form onSubmit={formik.handleSubmit}>
                     <div className='flex items-center justify-between mb-5'>
                         <div>
-                            <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Mã sự kiện <span>*</span></p>
-                            <Input name='maSuKien' onChange={formik.handleChange} style={{ width: '245px', height: '40px', borderRadius: '8px' }} value={formik.values.maSuKien} />
+                            <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Mã sự kiện <span style={{color:'#FD5959'}}>*</span></p>
+                            <Input name='maSuKien' onChange={formik.handleChange} style={{ width: '120px', height: '40px', borderRadius: '8px' }} value={formik.values.maSuKien} />
                         </div>
                         <div>
                             <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Tên sự kiện</p>
-                            <Input name='tenSuKien' onChange={formik.handleChange} style={{ width: '367px', height: '40px', borderRadius: '8px' }} value={formik.values.tenSuKien} />
+                            <Input name='tenSuKien' onChange={formik.handleChange} style={{ width: '320px', height: '40px', borderRadius: '8px' }} value={formik.values.tenSuKien} />
                         </div>
                     </div>
 
                     <div className='flex items-center justify-between mb-5'>
-                        <div>
+                        <div className='mr-5'>
                             <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Ngày áp dụng</p>
                             <div className='flex items-center'>
                                 <Calendar value={formik.values.ngayApDung?.toDate()} feature='update' formik={formik} handleDatePicker={handleOnChangeDatePicker} name='ngayApDung'></Calendar>
                                 {/* <DatePicker format='DD/MM/YYYY' value={moment(formik.values.ngayApDung?.toDate(), 'DD /MM/YYYY')} style={{ height: '40px', marginRight: '8px', borderRadius: '8px' }} onChange={handleOnChangeDatePicker('ngayApDung',formik.values.ngayApDung?.toDate())} /> */}
-                                <TimePicker  value={moment(formik.values.ngayApDung?.toDate(), 'hh:mm:ss')} style={{ height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayApDung', formik.values.ngayApDung?.toDate())}></TimePicker>
+                                <TimePicker value={moment(formik.values.ngayApDung?.toDate(), 'hh:mm:ss')} style={{marginLeft: '12px', height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayApDung', formik.values.ngayApDung?.toDate())}></TimePicker>
                             </div>
                         </div>
-                        <div style={{ flexBasis: '367px' }} >
+                        <div>
                             <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Ngày hết hạn</p>
                             <div className='flex items-center'>
                                 <Calendar value={formik.values.ngayHetHan?.toDate()} feature='update' formik={formik} handleDatePicker={handleOnChangeDatePicker} name='ngayHetHan'></Calendar>
                                 {/* <DatePicker format='DD/MM/YYYY' value={moment(formik.values.ngayHetHan?.toDate())} style={{ height: '40px', marginRight: '8px', borderRadius: '8px' }} onChange={handleOnChangeDatePicker('ngayHetHan',formik.values.ngayHetHan?.toDate())} /> */}
-                                <TimePicker  value={moment(formik.values.ngayHetHan?.toDate(), 'hh:mm:ss')} style={{ height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayHetHan', formik.values.ngayHetHan?.toDate())}></TimePicker>
+                                <TimePicker  value={moment(formik.values.ngayHetHan?.toDate(), 'hh:mm:ss')} style={{marginLeft: '12px', height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayHetHan', formik.values.ngayHetHan?.toDate())}></TimePicker>
                             </div>
 
                         </div>
@@ -179,12 +179,15 @@ export default function UpdateTicketPack() {
                         </Select>
 
                     </div>
-                    <p className='text-xs italic' style={{ color: '#1E0D03', opacity: '0.4' }}><span>*</span> là thông tin bắt buộc</p>
+                    <p className='text-xs italic'>
+                        <span className='font-semibold' style={{color:'#FD5959'}}>*</span>
+                        <span  style={{ color: '#1E0D03', opacity: '0.4' }}>    là thông tin bắt buộc</span>
+                     </p>
                     <div className='text-center'>
                         <button type='button' onClick={() => {
                             dispatch(editModalVisibleActionCreator(false))
-                        }} className='rounded-lg py-3 px-6 font-bold text-lg bg-white w-40 mr-4' style={{ color: '#FF993C', border: '1px solid #FF993C' }}>Hủy</button>
-                        <button type='submit' className='rounded-lg py-3 px-6 font-bold text-lg text-white w-40' style={{ background: '#FF993C' }}>Lưu</button>
+                        }}className='button--white mr-5' style={{width:'132px'}}>Hủy</button>
+                        <button type='submit' className= 'button--orange' style={{width:'132px'}}>Lưu</button>
                     </div>
                 </form>
             </Modal>

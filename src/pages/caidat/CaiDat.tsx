@@ -117,7 +117,7 @@ export default function CaiDat() {
 
       <div className='flex justify-between items-center'>
         {/* input search  */}
-        <InputSearch placeholder='Tìm bằng số vé'></InputSearch>
+        <InputSearch size ='base' placeholder='Tìm bằng số vé'></InputSearch>
 
 
         {/* filter ticket  and export file  */}

@@ -11,13 +11,14 @@ export const getTicketPackListActionCreator = () => {
     return async (dispatch: Dispatch) => {
         dispatch(showLoadingActionCreator())
         try {
-            const ticketPackList: any = await baseService.get('danhSachGoi')
-            console.log('ticketpacklist', ticketPackList)
+            const { lst, status } = await baseService.get('danhSachGoi')
+            if (status === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: TicketPackManagerType.GET_TICKET_PACK_LIST,
+                    payload: lst
+                })
+            }
 
-            dispatch({
-                type: TicketPackManagerType.GET_TICKET_PACK_LIST,
-                payload: ticketPackList
-            })
         } catch (error) {
             console.log('error', error)
         }
@@ -51,11 +52,11 @@ export const updateTicketPackActionCreator = (values: TicketPack) => {
     return async (dispatch: Dispatch<any>) => {
 
         try {
-            const {status}  = await baseService.updateTicketPack(values)
-            if(status === STATUS_CODE.SUCCESS){
+            const { status } = await baseService.updateTicketPack(values)
+            if (status === STATUS_CODE.SUCCESS) {
                 dispatch(getTicketPackListActionCreator())
             }
-          
+
         } catch (error) {
             console.log('error', error)
         }
@@ -63,15 +64,15 @@ export const updateTicketPackActionCreator = (values: TicketPack) => {
     }
 
 }
-export const addTicketPackActionCreator = (values:any)=>{
+export const addTicketPackActionCreator = (values: any) => {
     console.log('values them', values)
-    return async (dispatch: Dispatch<any>)=>{
+    return async (dispatch: Dispatch<any>) => {
         try {
-            const {status} = await baseService.addTicketPack(values)
-            if(status === STATUS_CODE.SUCCESS){
+            const { status } = await baseService.addTicketPack(values)
+            if (status === STATUS_CODE.SUCCESS) {
                 dispatch(getTicketPackListActionCreator())
             }
-            
+
         } catch (error) {
             console.log('error', error)
         }

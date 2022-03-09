@@ -56,63 +56,63 @@ export class BaseService {
             });
     }
 
-    filterTicKet(collectionName: string, values: FilterTicket) {
-        console.log('params', values)
-        const matchesCollection = db.collection(collectionName);
-        let query: any = matchesCollection;
-        let keys = Object.keys(values);
-        for (let i = 0; i < keys.length; i++) {
-            if (keys[i] === 'ngaySuDung') {
-                let index = i;
-                keys[index] = keys[0]
-                keys[0] = keys[index]
-                break;
-            }
-        }
+    // filterTicKet(collectionName: string, values: FilterTicket) {
+    //     console.log('params', values)
+    //     const matchesCollection = db.collection(collectionName);
+    //     let query: any = matchesCollection;
+    //     let keys = Object.keys(values);
+    //     for (let i = 0; i < keys.length; i++) {
+    //         if (keys[i] === 'ngaySuDung') {
+    //             let index = i;
+    //             keys[index] = keys[0]
+    //             keys[0] = keys[index]
+    //             break;
+    //         }
+    //     }
 
-        for (let i = 0; i < keys.length; i++) {
-            // console.log('key', key)
-            const value = values[keys[i] as keyof FilterTicket]
-            if (value === "") {
-                continue;
-            } else if (keys[i] === 'congCheckInId') {
-                query = query.where(keys[i], 'in', value)
-            } else if (keys[i] === 'ngaySuDung') {
-                const startTime = values.ngaySuDung?.startTime
-                const endTime = values.ngaySuDung?.endTime
-                // const modifiedStartTime = firebase.firestore.Timestamp.fromDate()
-                // const modifiedEndTime = firebase.firestore.Timestamp.fromDate(new DataView(endTime))
-                query = query.where('ngaySuDung', '>=', startTime)
+    //     for (let i = 0; i < keys.length; i++) {
+    //         // console.log('key', key)
+    //         const value = values[keys[i] as keyof FilterTicket]
+    //         if (value === "") {
+    //             continue;
+    //         } else if (keys[i] === 'congCheckInId') {
+    //             query = query.where(keys[i], 'in', value)
+    //         } else if (keys[i] === 'ngaySuDung') {
+    //             const startTime = values.ngaySuDung?.startTime
+    //             const endTime = values.ngaySuDung?.endTime
+    //             // const modifiedStartTime = firebase.firestore.Timestamp.fromDate()
+    //             // const modifiedEndTime = firebase.firestore.Timestamp.fromDate(new DataView(endTime))
+    //             query = query.where('ngaySuDung', '>=', startTime)
 
-                query = query.where('ngaySuDung', '<=', endTime)
-            } else {
-                query = query.where(keys[i], '==', value)
-            }
-        }
+    //             query = query.where('ngaySuDung', '<=', endTime)
+    //         } else {
+    //             query = query.where(keys[i], '==', value)
+    //         }
+    //     }
 
-        return query.get().then((data: any) => {
+    //     return query.get().then((data: any) => {
 
-            const lst: any = [];
-            data.forEach((doc: any) => {
-                lst.push({ ...doc.data(), docId: doc.id })
-            })
-            return {
-                lst: lst,
-                status: 200
+    //         const lst: any = [];
+    //         data.forEach((doc: any) => {
+    //             lst.push({ ...doc.data(), docId: doc.id })
+    //         })
+    //         return {
+    //             lst: lst,
+    //             status: 200
 
-            }
-        }).catch((error: any) => {
-            return {
-                lst: [],
-                status: 500
-            }
-            console.log(error)
-        })
-
-
+    //         }
+    //     }).catch((error: any) => {
+    //         return {
+    //             lst: [],
+    //             status: 500
+    //         }
+    //         console.log(error)
+    //     })
 
 
-    }
+
+
+    // }
 
 
 

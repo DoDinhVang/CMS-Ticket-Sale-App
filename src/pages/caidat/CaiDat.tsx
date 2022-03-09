@@ -17,7 +17,7 @@ export default function CaiDat() {
   const lst = ticketPackList.map((ticketPack: TicketPack, index: number) => {
     return { ...ticketPack, key: index }
   })
-  console.log('lst', lst)
+
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getTicketPackListActionCreator())
@@ -44,7 +44,7 @@ export default function CaiDat() {
       dataIndex: 'ngayApDung',
       key: 'ngayApDung',
       render: (text: any) => {
-        console.log('text', text)
+       
         return <span>{moment(text.toDate()).format('DD/MM/YYYY')}</span>
       }
     },
@@ -69,7 +69,7 @@ export default function CaiDat() {
       dataIndex: 'giaCombo',
       key: 'giaCombo',
       render: (text: TicketPack['giaCombo']) => {
-        console.log('text', text)
+      
         return <>
           {text?.giaVe ? <span>{`${text.giaVe}/ ${text.soVe}`}</span> : <span></span>}
         </>
@@ -91,7 +91,7 @@ export default function CaiDat() {
       title: '',
       key: 'capNhat',
       render: (record: any) => {
-        console.log('record', record)
+        
         return <div onClick={() => {
           dispatch(editModalVisibleActionCreator(true))
           dispatch(getInfoTicketPackActionCreator({ ...record }))
@@ -104,11 +104,11 @@ export default function CaiDat() {
     return {
       "STT": index,
       "Mã Gói": ticketPack.maGoi,
-      "Tên gói Vé": ticketPack.tenGoi,
-      "Ngày áp dụng": moment(ticketPack.ngayApDung.toDate()).format("DD / MM / YYYY"),
-      "Ngày hết hạn": moment(ticketPack.ngayHetHan.toDate()).format("DD / MM / YYYY"),
-      "Giá vé": ticketPack.giaVe,
-      "Giá vé combo": ticketPack.giaCombo?.giaVe ? `${ticketPack.giaCombo.giaVe} / ${ticketPack.giaCombo.soVe}` : "",
+      "Tên Gói Vé": ticketPack.tenGoi,
+      "Ngày Áp Dụng": moment(ticketPack.ngayApDung.toDate()).format("DD / MM / YYYY"),
+      "Ngày Hết Hạn": moment(ticketPack.ngayHetHan.toDate()).format("DD / MM / YYYY"),
+      "Giá Vé": ticketPack.giaVe,
+      "Giá Vé Combo": ticketPack.giaCombo?.giaVe ? `${ticketPack.giaCombo.giaVe} / ${ticketPack.giaCombo.soVe}` : "",
       "Tình Trạng": ticketPack.trangThai ? "Đang sử dụng" : "Chưa sử dụng"
     }
   })

@@ -1,4 +1,4 @@
-import { Modal, Button, Input, DatePicker, TimePicker, Checkbox, Select } from 'antd';
+import { Modal, Button, Input, TimePicker, Checkbox, Select } from 'antd';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addModalVisibleActionCreator, addTicketPackActionCreator, updateTicketPackActionCreator } from '../../../redux/action-creator/quanLyGoiVeActionCreator';
@@ -7,9 +7,9 @@ import { useFormik } from 'formik';
 import { TicketPack } from '../../../model/quanlygoive/TicketPack'
 import moment from 'moment';
 import firebase from "firebase";
-import Calendar from '../../../component/Calendar';
 import { InfoTicketPack } from '../../../model/quanlygoive/TicketPack'
 import { Value } from 'sass';
+import DatePicker from '../../../component/DatePicker';
 
 const { Option } = Select;
 export default function AddTicketPack() {
@@ -28,42 +28,39 @@ export default function AddTicketPack() {
         dispatch(addModalVisibleActionCreator(false))
     };
     const initialValues = new InfoTicketPack()
-
-
-
-    console.log('infoTicketPack', infoTicketPack)
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: initialValues,
         onSubmit: (values: TicketPack) => {
             const { maGoi, docId, ...data } = values;
-            console.log('data', data)
             dispatch(addTicketPackActionCreator(data))
 
         }
     })
-    // moment((formik.values.ngayApDung).toDate()).format('DD/MM/YYY h:mm:ss')
-    // console.log('ngayapdung', formik.values.ngayApDung?.toDate())
-    const handleOnChangeDatePicker = (name: string, date: Date, value: any) => {
-        console.log('time', date)
 
-        const datePicker = new Date(moment(value).format())
-        const day = datePicker.getDate()
-        const month = datePicker.getMonth()
-        const year = datePicker.getFullYear()
-        const hour = date.getHours()
-        const minute = date.getMinutes()
-        const second = date.getSeconds()
-        // const timestamp = firebase.firestore.Timestamp.fromDate(new Date(moment(value).format('DD / MM /YYYY')));
+    const handleOnChangeDatePicker = (value: Date, name: string) => {
+        console.log('value: date', value)
+        const day = value.getDate()
+        const month = value.getMonth()
+        const year = value.getFullYear()
+        console.log('day, month, year', day, month, year)
+        let hour = formik.values.ngayApDung?.toDate().getHours()
+        let minute = formik.values.ngayApDung?.toDate().getMinutes()
+        let second = formik.values.ngayApDung?.toDate().getSeconds()
+        if (isNaN(hour) || isNaN(minute) || isNaN(second)) {
+            hour = 0
+            minute = 0
+            second = 0
+        }
         const timestamp = firebase.firestore.Timestamp.fromDate(new Date(year, month, day, hour, minute, second))
-        console.log('timestampdate', timestamp)
         formik.setFieldValue(name, timestamp)
+
     }
     const handleOnChangeTimePicker = (name: string, date: Date) => {
 
         return (value: any) => {
             const timePicker = new Date(moment(value).format())
-            // console.log('timePicker', timePicker)
+
             const day = date.getDate()
             const month = date.getMonth()
             const year = date.getFullYear()
@@ -71,7 +68,7 @@ export default function AddTicketPack() {
             const minute = timePicker.getMinutes()
             const second = timePicker.getSeconds()
             const timestamp = firebase.firestore.Timestamp.fromDate(new Date(year, month, day, hour, minute, second))
-            console.log('timestamptime', timestamp)
+
             formik.setFieldValue(name, timestamp)
         }
     }
@@ -90,18 +87,14 @@ export default function AddTicketPack() {
                         <div className='mr-5'>
                             <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Ngày áp dụng</p>
                             <div className='flex items-center'>
-
-                                <Calendar value={formik.values.ngayApDung?.toDate()} feature='add' formik={formik} handleDatePicker={handleOnChangeDatePicker} name='ngayApDung'></Calendar>
-                                {/* <DatePicker placeholder='dd/mm/yy' format='DD/MM/YYYY' style={{ height: '40px', marginRight: '8px', borderRadius: '8px' }} onChange={()=>{}} /> */}
-                                {/* <TimePicker onChange={onChange} defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} /> */}
+                                <DatePicker onChange={handleOnChangeDatePicker} name='ngayApDung' ></DatePicker>
                                 <TimePicker placeholder='hh:mm:ss' style={{ marginLeft: '12px', height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayApDung', formik.values.ngayApDung?.toDate())}></TimePicker>
                             </div>
                         </div>
                         <div>
                             <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Ngày hết hạn</p>
                             <div className='flex items-center'>
-                                <Calendar value={formik.values.ngayHetHan?.toDate()} handleDatePicker={handleOnChangeDatePicker} feature='add' formik={formik} name='ngayHetHan'></Calendar>
-                                {/* <DatePicker placeholder='dd/mm/yy' format='DD/MM/YYYY' style={{ height: '40px', marginRight: '8px', borderRadius: '8px' }} onChange={() => { }} /> */}
+                                <DatePicker onChange={handleOnChangeDatePicker} name='ngayHetHan' ></DatePicker>
                                 <TimePicker placeholder='hh:mm:ss' style={{ marginLeft: '12px', height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayHetHan', formik.values.ngayHetHan?.toDate())}></TimePicker>
                             </div>
 
@@ -130,7 +123,7 @@ export default function AddTicketPack() {
                         </div>
                         <div>
                             <Checkbox className=' font-medium' style={{ color: '#1E0D03', lineHeight: '20px', opacity: '0.7', fontSize: '16px' }} onChange={(e) => {
-                              
+
                                 const { checked } = e.target;
                                 if (checked) {
                                     setdisibleInputAnt({

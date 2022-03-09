@@ -51,39 +51,31 @@ export const getCheckInGateListActionCreator = () => {
 
         try {
             const { lst, status } = await baseService.get('congCheckIn')
-            if(status===200){
+            if (status === 200) {
                 dispatch({
                     type: TicketManagerType.GET_CHECKIN_GATE_LIST,
                     payload: lst
                 })
             }
         } catch (error) {
-            console.log('error',error)
+            console.log('error', error)
         }
 
     }
 }
 
-export const filterTickerActionCreator = (values: FilterTicket) => {
+export const filterTickerActionCreator = (values: any) => {
 
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: Dispatch<any>) => {
 
-        dispatch(showLoadingActionCreator())
-        try {
-            const { lst, status } = await baseService.filterTicKet('danhSachVe', values)
 
-            if (status === STATUS_CODE.SUCCESS) {
-                dispatch({
-                    type: TicketManagerType.SET_FILTER_TICKET,
-                    payload: lst
-
-                })
-            }
-
-        } catch (error) {
-            console.log('err', error)
-        }
-        dispatch(hideLoadingActionCreator())
-        dispatch(modalVisibleActionCreator(false))
+        await dispatch(showLoadingActionCreator())
+        await dispatch(getTicketListActionCreator())
+        await dispatch({
+            type: TicketManagerType.SET_FILTER_TICKET,
+            payload: values
+        })
+        await dispatch(hideLoadingActionCreator())
+        await dispatch(modalVisibleActionCreator(false))
     }
 }

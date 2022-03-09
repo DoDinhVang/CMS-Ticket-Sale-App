@@ -34,9 +34,6 @@ export default function HomeTemPlate(props: homTemplateProps) {
                     <Sider
                         breakpoint="md"
                         collapsedWidth="0"
-                        onBreakpoint={broken => {
-                            console.log(broken);
-                        }}
                         onCollapse={(collapsed, type) => {
                             console.log(collapsed, type);
                         }}

@@ -1,15 +1,14 @@
 import React from 'react'
 import { Area, Pie, G2 } from '@ant-design/plots';
 import { useEffect, useState } from 'react';
-import Calendar from '../../component/Calendar'
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRevenueActionCreator } from '../../redux/action-creator/dashboardActionCreator';
 import { State } from '../../redux/configStore'
 import { Empty } from 'antd';
+import DatePicker from '../../component/DatePicker';
 const getDaysInMonth = (month: number, year: number) => {
   var date = new Date(year, month, 1);
-  console.log('date', new Date(date))
   var days = [];
   while (date.getMonth() === month) {
     days.push(moment(new Date(date)).format('DD/MM/YYYY'));
@@ -21,8 +20,6 @@ export default function TrangChu() {
   const dispatch = useDispatch();
   let { revenueData, totalRevenue, month, year } = useSelector((state: State) => state.dashboardReducer)
 
-
-  console.log('rve', revenueData)
 
   const config = {
     data: revenueData,
@@ -98,7 +95,6 @@ export default function TrangChu() {
     showMarker: false,
     tooltip: {
       customContent: (title: any, data: any) => {
-        console.log('title', title)
         return `<div>${title}</div>`;
       }
     },
@@ -129,7 +125,7 @@ export default function TrangChu() {
       <h1 className='text-3xl font-bold' style={{ color: " #1E0D03" }}>Thống kê</h1>
       <div className='flex items-center justify-between'>
         <h2 className='font-semibold' style={{ lineHeight: '28px', fontSize: '18px' }}>Doanh thu</h2>
-        <Calendar feature='logistics'></Calendar>
+        <DatePicker />
       </div>
       {revenueData.length === 0 ? <Empty></Empty> : ''}
       <Area {...config} />
@@ -138,15 +134,15 @@ export default function TrangChu() {
         <p className='text-2xl font-bold' style={{ color: "#1E0D03" }}>{totalRevenue.toLocaleString()}</p>
       </div>
       <div className='flex'>
-        <Calendar></Calendar>
+        <DatePicker />
         <div className='flex'>
           <div>
             <h2 className='text-center'>Gói gia đình</h2>
-            <Pie {...configPie1} style ={{position: 'relative', top: '-48px',left: '57px'}} />
+            <Pie {...configPie1} style={{ position: 'relative', top: '-48px', left: '57px' }} />
           </div>
           <div>
             <h2 className='text-center'>Gói sự kiện</h2>
-            <Pie {...configPie2} style ={{position: 'relative', top: '-48px',left: '57px'}}/></div>
+            <Pie {...configPie2} style={{ position: 'relative', top: '-48px', left: '57px' }} /></div>
         </div>
       </div>
     </div>

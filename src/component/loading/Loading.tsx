@@ -4,7 +4,7 @@ import { State } from '../../redux/configStore';
 export default function Loading() {
 
     const {display} = useSelector((state:State)=> state.loadingReducer)
-    console.log('display', display)
+  
     return <div id='loading' className='fixed top-0 left-0 h-screen w-screen ' style={{
         backgroundColor: "rgb(239,247,247)",
         opacity: '0.6',

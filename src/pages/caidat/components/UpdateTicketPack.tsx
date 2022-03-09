@@ -1,19 +1,17 @@
-import { Modal, Button, Input, DatePicker, TimePicker, Checkbox, Select } from 'antd';
-import { useState } from 'react';
+import { Modal, Button, Input, TimePicker, Checkbox, Select } from 'antd';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { editModalVisibleActionCreator, updateTicketPackActionCreator } from '../../../redux/action-creator/quanLyGoiVeActionCreator';
+import { editModalVisibleActionCreator, getTicketPackListActionCreator, updateTicketPackActionCreator } from '../../../redux/action-creator/quanLyGoiVeActionCreator';
 import { State } from '../../../redux/configStore';
 import { useFormik } from 'formik';
 import { TicketPack } from '../../../model/quanlygoive/TicketPack'
 import moment from 'moment';
 import firebase from "firebase";
-import { timeStamp } from 'console';
-import Calendar from '../../../component/Calendar';
+import DatePicker from '../../../component/DatePicker'
 const { Option } = Select;
 export default function UpdateTicketPack() {
 
     const { isUpdateModalVisible, infoTicketPack } = useSelector((state: State) => state.ticketPackManagerReducer)
-    console.log('infoticketpack', infoTicketPack)
     const dispatch = useDispatch()
     const handleOk = () => {
         dispatch(editModalVisibleActionCreator(false))
@@ -39,32 +37,26 @@ export default function UpdateTicketPack() {
         tenGoi: infoTicketPack.tenGoi,
         trangThai: infoTicketPack.trangThai
     }
-    console.log('itinial', initialValues)
 
-    console.log('infoTicketPack', infoTicketPack)
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: initialValues,
         onSubmit: (values: TicketPack) => {
-            console.log('value', values)
+            console.log('submit values', values)
             dispatch(updateTicketPackActionCreator(values))
         }
     })
-    // moment((formik.values.ngayApDung).toDate()).format('DD/MM/YYY h:mm:ss')
-    // console.log('ngayapdung', formik.values.ngayApDung?.toDate())
-    const handleOnChangeDatePicker = (name: string, date: Date, value: any) => {
-        console.log('time', date)
-
-        const datePicker = new Date(moment(value).format())
-        const day = datePicker.getDate()
-        const month = datePicker.getMonth()
-        const year = datePicker.getFullYear()
-        const hour = date.getHours()
-        const minute = date.getMinutes()
-        const second = date.getSeconds()
-        // const timestamp = firebase.firestore.Timestamp.fromDate(new Date(moment(value).format('DD / MM /YYYY')));
+    
+    const handleOnChangeDatePicker = (value: Date, name: string) => {
+        console.log('value: date', value)
+        const day = value.getDate()
+        const month = value.getMonth()
+        const year = value.getFullYear()
+        console.log('day, month, year', day, month, year)
+        let hour = formik.values.ngayApDung?.toDate().getHours()
+        let minute = formik.values.ngayApDung?.toDate().getMinutes()
+        let second = formik.values.ngayApDung?.toDate().getSeconds()
         const timestamp = firebase.firestore.Timestamp.fromDate(new Date(year, month, day, hour, minute, second))
-        console.log('timestamp', timestamp)
         formik.setFieldValue(name, timestamp)
 
     }
@@ -72,7 +64,6 @@ export default function UpdateTicketPack() {
 
         return (value: any) => {
             const timePicker = new Date(moment(value).format())
-            console.log('timePicker', timePicker)
             const day = date.getDate()
             const month = date.getMonth()
             const year = date.getFullYear()
@@ -83,6 +74,10 @@ export default function UpdateTicketPack() {
             formik.setFieldValue(name, timestamp)
         }
     }
+    console.log('ngày áp dụng', formik.values.ngayApDung)
+    useEffect(() => {
+        dispatch(getTicketPackListActionCreator())
+    }, [])
 
 
     return (
@@ -92,7 +87,7 @@ export default function UpdateTicketPack() {
                 <form onSubmit={formik.handleSubmit}>
                     <div className='flex items-center justify-between mb-5'>
                         <div>
-                            <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Mã sự kiện <span style={{color:'#FD5959'}}>*</span></p>
+                            <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Mã sự kiện <span style={{ color: '#FD5959' }}>*</span></p>
                             <Input name='maSuKien' onChange={formik.handleChange} style={{ width: '120px', height: '40px', borderRadius: '8px' }} value={formik.values.maSuKien} />
                         </div>
                         <div>
@@ -105,17 +100,15 @@ export default function UpdateTicketPack() {
                         <div className='mr-5'>
                             <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Ngày áp dụng</p>
                             <div className='flex items-center'>
-                                <Calendar value={formik.values.ngayApDung?.toDate()} feature='update' formik={formik} handleDatePicker={handleOnChangeDatePicker} name='ngayApDung'></Calendar>
-                                {/* <DatePicker format='DD/MM/YYYY' value={moment(formik.values.ngayApDung?.toDate(), 'DD /MM/YYYY')} style={{ height: '40px', marginRight: '8px', borderRadius: '8px' }} onChange={handleOnChangeDatePicker('ngayApDung',formik.values.ngayApDung?.toDate())} /> */}
-                                <TimePicker value={moment(formik.values.ngayApDung?.toDate(), 'hh:mm:ss')} style={{marginLeft: '12px', height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayApDung', formik.values.ngayApDung?.toDate())}></TimePicker>
+                                <DatePicker onChange={handleOnChangeDatePicker} name='ngayApDung' defaultValue={formik.values.ngayApDung?.toDate()} /> :
+                                <TimePicker value={moment(formik.values.ngayApDung?.toDate(), 'hh:mm:ss')} style={{ marginLeft: '12px', height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayApDung', formik.values.ngayApDung?.toDate())}></TimePicker>
                             </div>
                         </div>
                         <div>
                             <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Ngày hết hạn</p>
                             <div className='flex items-center'>
-                                <Calendar value={formik.values.ngayHetHan?.toDate()} feature='update' formik={formik} handleDatePicker={handleOnChangeDatePicker} name='ngayHetHan'></Calendar>
-                                {/* <DatePicker format='DD/MM/YYYY' value={moment(formik.values.ngayHetHan?.toDate())} style={{ height: '40px', marginRight: '8px', borderRadius: '8px' }} onChange={handleOnChangeDatePicker('ngayHetHan',formik.values.ngayHetHan?.toDate())} /> */}
-                                <TimePicker  value={moment(formik.values.ngayHetHan?.toDate(), 'hh:mm:ss')} style={{marginLeft: '12px', height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayHetHan', formik.values.ngayHetHan?.toDate())}></TimePicker>
+                                <DatePicker onChange={handleOnChangeDatePicker} name='ngayHetHan' defaultValue={formik.values.ngayHetHan?.toDate()} />
+                                <TimePicker value={moment(formik.values.ngayHetHan?.toDate(), 'hh:mm:ss')} style={{ marginLeft: '12px', height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayHetHan', formik.values.ngayHetHan?.toDate())}></TimePicker>
                             </div>
 
                         </div>
@@ -180,14 +173,14 @@ export default function UpdateTicketPack() {
 
                     </div>
                     <p className='text-xs italic'>
-                        <span className='font-semibold' style={{color:'#FD5959'}}>*</span>
-                        <span  style={{ color: '#1E0D03', opacity: '0.4' }}>    là thông tin bắt buộc</span>
-                     </p>
+                        <span className='font-semibold' style={{ color: '#FD5959' }}>*</span>
+                        <span style={{ color: '#1E0D03', opacity: '0.4' }}>    là thông tin bắt buộc</span>
+                    </p>
                     <div className='text-center'>
                         <button type='button' onClick={() => {
                             dispatch(editModalVisibleActionCreator(false))
-                        }}className='button--white mr-5' style={{width:'132px'}}>Hủy</button>
-                        <button type='submit' className= 'button--orange' style={{width:'132px'}}>Lưu</button>
+                        }} className='button--white mr-5' style={{ width: '132px' }}>Hủy</button>
+                        <button type='submit' className='button--orange' style={{ width: '132px' }}>Lưu</button>
                     </div>
                 </form>
             </Modal>

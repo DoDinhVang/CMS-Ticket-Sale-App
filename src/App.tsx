@@ -15,12 +15,18 @@ import '../src/sass/Componens/button.scss'
 import '../src/sass/Layouts/quanLyVe.scss'
 import '../src/sass/Componens/inputSearch.scss'
 import '../src/sass/Layouts/homeTemplate.scss'
+import '../src/sass/Componens/calendar.scss'
 import AddTicketPack from './pages/caidat/components/AddTicketPack';
-// import Calendar from './component/Calendar';
-// import MyDatePicker from './component/MyDatePicker';
+import Calendar2 from './component/Calendar2';
+import DatePicker from './component/DatePicker';
+
 
 function App() {
 
+  const handleChange = (value:any)=>{
+   
+    console.log('value input', value)
+  }
 
   return (
     <Router history={history}>
@@ -28,6 +34,8 @@ function App() {
       <ModalFilterTicket />
       <UpdateTicketPack />
       <AddTicketPack />
+      {/* <DatePicker onChange = {handleChange} />
+      <DatePicker onChange = {handleChange} /> */}
 
       {/* <Calendar/> */}
       <Switch>

@@ -9,39 +9,27 @@ import { filterTickerActionCreator, getCheckInGateListActionCreator } from '../.
 import { CheckInGate } from '../../model/quanlyve/CheckInGate';
 import { FilterTicket } from '../../model/quanlyve/FilterTicket'
 import { useFormik } from 'formik';
-import firebase from 'firebase';
 import moment from 'moment';
-import { toNamespacedPath } from 'node:path/posix';
-import Calendar from '../Calendar';
+
+import DatePicker from '../DatePicker';
 
 export default function ModalFilterTicket() {
 
   const { modalVisible } = useSelector((state: State) => state.modalFilterTicketReducer)
   const { checkInGateList } = useSelector((state: State) => state.quanLyVeReducer);
-  const { date,name} = useSelector((state: State) => state.calendarReducer)
   const dispatch = useDispatch();
-
   const initialValues: FilterTicket = {};
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: initialValues,
     onSubmit: values => {
-      console.log('value', values)
+      console.log('values submit', values)
       dispatch(filterTickerActionCreator(values))
     },
   });
-
- 
-
   const [disableCheckBox, setDisableCheckBox] = useState(false)
-
-  console.log('disableCheckBox', disableCheckBox)
   const [checkedList, setCheckedList] = useState<any>([]);
-  console.log('checkedlist', checkedList)
-
-
   const checkboxValueOnchange = (value: any) => {
-
     let checkBoxValueIsEmpty: boolean = false;
     let valueIsEmpty: string = '';
     for (let i = 0; i < value.length; i++) {
@@ -63,6 +51,11 @@ export default function ModalFilterTicket() {
 
   }
 
+  const handleOnChange = (value: any, name: string) => {
+
+    formik.setFieldValue(name, value)
+  }
+
 
   useEffect(() => {
     dispatch(getCheckInGateListActionCreator())
@@ -80,6 +73,7 @@ export default function ModalFilterTicket() {
       onCancel={() => { dispatch(modalVisibleActionCreator(false)) }}
     >
 
+
       {/* calendar  */}
 
       <form onSubmit={formik.handleSubmit} className='modal_ticket_content'>
@@ -87,15 +81,11 @@ export default function ModalFilterTicket() {
           <div className='flex items-center'>
             <div style={{ marginRight: '130px' }}>
               <p className='text-title'>Từ ngày</p>
-              {/* <DatePicker format='DD/MM/YYYY' style={{ borderRadius: '8px' }} onChange={onChange('startTime')} /> */}
-              {/* <MyDatePicker></MyDatePicker> */}
-              <Calendar value = {formik.values.ngaySuDung?.startTime} feature = 'filter' name = 'startTime' formik = {formik}></Calendar>
+              <DatePicker name = 'startTime' onChange = {handleOnChange}></DatePicker>
             </div>
             <div >
               <p className='text-title'>Đến ngày</p>
-              <Calendar value = {formik.values.ngaySuDung?.endTime} feature = 'filter' name = 'endTime' formik = {formik}></Calendar>
-              {/* <MyDatePicker></MyDatePicker> */}
-              {/* <DatePicker format='DD/MM/YYYY' style={{ borderRadius: '8px' }} onChange={onChange(`endTime`)} /> */}
+              <DatePicker name='endTime' onChange={handleOnChange}></DatePicker>
             </div>
           </div>
           {/* radio input */}
@@ -119,7 +109,7 @@ export default function ModalFilterTicket() {
                   <Col key='all' span={8}>
                     <Checkbox value={''} onChange={(e: any) => {
                       const { checked } = e.target
-                      console.log('checkded', checked)
+
                       if (checked) {
                         setDisableCheckBox(true)
                       } else {
@@ -138,7 +128,7 @@ export default function ModalFilterTicket() {
             </div>
           </div>
           <div className='text-center' style={{ marginTop: '30px' }}>
-            <button type='submit' className='button--white' style={{width: '160px'}}>Lọc</button>
+            <button type='submit' className='button--white' style={{ width: '160px' }}>Lọc</button>
           </div>
         </div>
       </form>

@@ -26,9 +26,6 @@ export default function QuanLyVe() {
     const lst = ticketList.filter((ve: any) => ve.maGoi === maGoi).map((ve: any, index: number) => {
         return { ...ve, key: index }
     })
-
-    console.log('lst', lst)
-
     useEffect(() => {
         dispatch(getTicketListActionCreator())
 
@@ -83,7 +80,7 @@ export default function QuanLyVe() {
             dataIndex: 'ngaySuDung',
             key: 'ngaySuDung',
             render: (text: any) => {
-                return <span>{moment(text.toDate()).format('DD/MM/YYYY')}</span>
+                return <span>{moment(text).format('DD/MM/YYYY')}</span>
             }
 
         },
@@ -92,7 +89,7 @@ export default function QuanLyVe() {
             dataIndex: 'ngayHetHan',
             key: 'ngayHetHan',
             render: (text: any) => {
-                return <span>{moment(text.toDate()).format('DD/MM/YYYY')}</span>
+                return <span>{moment(text).format('DD/MM/YYYY')}</span>
             }
 
         },
@@ -110,12 +107,12 @@ export default function QuanLyVe() {
         return {
           "STT": index,
           "Booking Code": ele.bookingCode,
-          "So Ve": ele.soVe,
-          "Ten Su Kien": ele.tenSuKien,
-          "Tinh Trang Su Dung": ele.tinhTrangSuDung === DA_SU_DUNG? 'da su dung': ele.tinhTrangSuDung === CHUA_SU_DUNG?'chua su dung': 'het han',
-          "Ngay Su Dung": moment(ele.ngaySuDung.toDate()).format('DD/MM/YYYY'),
-          "Ngay Het Han": moment(ele.ngayHetHan.toDate()).format('DD/MM/YYYY'),
-          "Cong CheckIn": ele.congCheckIn
+          "Số Vé": ele.soVe,
+          "Tên Sự Kiện": ele.tenSuKien,
+          "Tình Trạng Sử Dụng": ele.tinhTrangSuDung === DA_SU_DUNG? 'Đã sử dụng': ele.tinhTrangSuDung === CHUA_SU_DUNG?'Chưa sử dụng': 'Hết hạn',
+          "Ngày Sử Dụng": moment(ele.ngaySuDung).format('DD/MM/YYYY'),
+          "Ngày Hết Hạn": moment(ele.ngayHetHan).format('DD/MM/YYYY'),
+          "Cổng CheckIn": ele.congCheckIn
         }
       }) 
     return (

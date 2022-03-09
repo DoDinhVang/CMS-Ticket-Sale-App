@@ -8,14 +8,14 @@ export const createCSV = (array: any[]) => {
         keys.forEach(function (key) {
             result += item[key] + ',';
         })
-        result += '\n';//Creates New Row
+        result += '\n';
     })
 
     return result;
 }
 export const downloadCSV = (array: any) => {
     console.log(createCSV(array))
-    let csv = 'data:text/csv;charset=utf-18,' + createCSV(array); //Creates CSV File Format
+    let csv = 'data:text/csv;charset=utf-18,\uFEFF' + createCSV(array);
     let excel = encodeURI(csv);
 
     let link = document.createElement('a');

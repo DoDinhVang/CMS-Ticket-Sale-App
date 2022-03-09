@@ -9,6 +9,7 @@ export interface TicketList{
         tinhTrangSuDung:string,
         ngaySuDung: any,
         ngayHetHan: any,
+        ngayApDung: any,
         congCheckIn: string,
         tinhTrangDoiSoat:boolean
 

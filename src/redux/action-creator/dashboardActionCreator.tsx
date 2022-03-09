@@ -7,9 +7,9 @@ export const getRevenueActionCreator = (month: number, year: number) => {
     return async (dispatch: Dispatch) => {
         try {
             const { lst, status } = await baseService.get('doanhThu')
-            console.log('lst', lst)
+           
             if (status === STATUS_CODE.SUCCESS) {
-                console.log('vào đây ')
+             
                 dispatch({
                     type: DashboardType.GET_REVENUE,
                     payload: {
@@ -21,7 +21,7 @@ export const getRevenueActionCreator = (month: number, year: number) => {
             }
 
         } catch (error) {
-            console.log('erroe', error)
+            console.log('error', error)
         }
     }
 
@@ -39,7 +39,6 @@ export const getRevenueDataByMonthActionCreator = (month: number, year: number) 
 export const getRevenueDataByWeekActionCreator = (startOfWeek: string, endOfWeek: string) => {
     return async (dispatch: Dispatch<any>) => {
       
-        console.log('sss0',)
         await dispatch(getRevenueActionCreator(new Date(startOfWeek).getMonth(),new Date(startOfWeek).getFullYear()))
         await dispatch({
             type: DashboardType.GET_REVENUE_BY_WEEK,

@@ -4,15 +4,15 @@ import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { State } from '../../redux/configStore';
 import InputSearch from '../../component/InputSearch'
-import { Table, Tag, Space, Select, Radio, DatePicker, RadioChangeEvent } from 'antd';
+import { Table, Tag, Space, Select, Radio, RadioChangeEvent } from 'antd';
 import { useFormik } from 'formik';
 import { FilterTicket } from '../../model/quanlyve/FilterTicket';
 import { filterTickerActionCreator, getTicketListActionCreator } from '../../redux/action-creator/quanLyVeActionCreator';
 import { getEventListActionCreator } from '../../redux/action-creator/doiSoatVeActionCreator'
 import { Event } from '../../model/doiSoatVe/Events';
-import Calendar from '../../component/Calendar';
 import { TicketList } from '../../model/quanlyve/TicketList';
 import { downloadCSV } from '../../util/settings';
+import DatePicker from '../../component/DatePicker';
 
 export default function DoiSoatVe() {
 
@@ -26,10 +26,8 @@ export default function DoiSoatVe() {
 
 
     const options = eventList.map((event: Event, index: number) => {
-        console.log('event', event)
         return { label: event.tenSuKien, value: event.maSuKien }
     })
-    console.log('option', options)
 
     const columns = [
         {
@@ -52,7 +50,7 @@ export default function DoiSoatVe() {
             dataIndex: 'ngaySuDung',
             key: "ngaySuDung",
             render: (text: any) => {
-                return <span>{moment(text.toDate()).format('DD/MM/YYYY')}</span>
+                return <span>{moment(text).format('DD/MM/YYYY')}</span>
             }
         },
         {
@@ -92,7 +90,6 @@ export default function DoiSoatVe() {
         enableReinitialize: true,
         initialValues: initialValues,
         onSubmit: (values) => {
-            console.log('dữ liệu', values)
             dispatch(filterTickerActionCreator(values))
         }
 
@@ -109,6 +106,9 @@ export default function DoiSoatVe() {
         formik.setFieldValue('tinhTrangDoiSoat', value)
 
     }
+    const handleOnChange = (value: any, name: string) => {
+        formik.setFieldValue(name, value)
+    }
 
     useEffect(() => {
         dispatch(getTicketListActionCreator())
@@ -118,15 +118,15 @@ export default function DoiSoatVe() {
 
     const csvContent = lst.map((ele: TicketList, index: number) => {
         return {
-          "STT": index,
-          "So Ve": ele.soVe,
-          "Ten Su Kien": ele.tenSuKien,
-          "Ngay Su Dung": moment(ele.ngaySuDung.toDate()).format('DD/MM/YYYY'),
-          "Ngay Het Han": moment(ele.ngayHetHan.toDate()).format('DD/MM/YYYY'),
-          "Cong CheckIn": ele.congCheckIn,
-          "Tinh Trang Doi Soat": ele.tinhTrangDoiSoat?'Da Doi Soat':"Chua Doi Soat"
+            "STT": index,
+            "Số Vé": ele.soVe,
+            "Tên Sự Kiện": ele.tenSuKien,
+            "Ngày Sử Dụng": moment(ele.ngaySuDung).format('DD/MM/YYYY'),
+            "Ngày Hết Hạn": moment(ele.ngayHetHan).format('DD/MM/YYYY'),
+            "Cổng CheckIn": ele.congCheckIn,
+            "Tình Trạng Đối Soát": ele.tinhTrangDoiSoat ? 'Đã đối soát' : "Chưa đối Soát"
         }
-      }) 
+    })
     return (
         <div className='flex'>
             <div className='mr-5 bg-white p-6 rounded-3xl w-full'>
@@ -134,7 +134,7 @@ export default function DoiSoatVe() {
                 <h1 className='font-black text-4xl mb-6' style={{ lineHeight: "54px", color: "#1E0D03" }}>Đối soát vé</h1>
                 <div className='flex justify-between items-center'>
                     <InputSearch size='small' placeholder='Tìm bằng số vé'></InputSearch>
-                    {visibleButton ? <button onClick={()=>{
+                    {visibleButton ? <button onClick={() => {
                         downloadCSV(csvContent)
                     }} className='button--white'>Xuất file(.csv)</button> : <button className='button--orange'>Chốt đối soát</button>}
                 </div>
@@ -163,12 +163,12 @@ export default function DoiSoatVe() {
                     </div>
                     <div className='flex justify-between items-center mb-6'>
                         <p className='mb-0 font-semibold text-base'>từ ngày</p>
-                        <Calendar value={formik.values.ngaySuDung?.startTime} feature='filter' name='startTime' formik={formik}></Calendar>
+                        <DatePicker name='startTime' onChange={handleOnChange}></DatePicker>
 
                     </div>
                     <div className='flex justify-between items-center mb-6'>
                         <p className='mb-0 font-semibold text-base'>đến ngày</p>
-                        <Calendar value={formik.values.ngaySuDung?.endTime} feature='filter' name='endTime' formik={formik}></Calendar>
+                        <DatePicker name='endTime' onChange={handleOnChange}></DatePicker>
                     </div>
                     <div className='text-center'>
                         <button type='submit' className='button--white w-40 h-12'>Lọc</button>

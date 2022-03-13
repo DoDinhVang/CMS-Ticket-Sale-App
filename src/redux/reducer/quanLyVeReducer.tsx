@@ -1,10 +1,17 @@
 import { FilterTicket } from "../../model/quanlyve/FilterTicket";
 import { TicketList } from "../../model/quanlyve/TicketList";
+import { CHUA_SU_DUNG, DA_SU_DUNG } from "../../util/config";
 import { TicketManagerAction } from "../action/quanLyVeAction";
 import { TicketManagerType } from "../types/quanLyVeType";
 const initialState = {
-  ticketList: Array<TicketList>(),
-  checkInGateList: []
+  ticketList: Array<any>(),
+  checkInGateList: Array<any>(),
+  ticketStatusOfFA: Array<any>(),
+  ticketStatusOfEV: Array<any>(),
+  usedTicketFA: 0,
+  unusedTicketFA: 0,
+  usedTicketEV: 0,
+  unusedTicketEV: 0
 
 };
 
@@ -47,13 +54,63 @@ const quanLyVeReducer = (state = initialState, action: TicketManagerAction) => {
           return ticket[key as keyof TicketList] === value
         })
       }
-    
+
       for (let i = 0; i < keys.length; i++) {
         updateTicketList = getFilterTicketList(keys[i], values[i], updateTicketList)
       }
-      console.log('result',updateTicketList)
-      return { ...state ,ticketList: updateTicketList }
 
+      return { ...state, ticketList: updateTicketList }
+
+    }
+
+    case TicketManagerType.SET_TICKET_STATUS: {
+      const  month  = action.payload
+
+      const ticketStatusOfFA = []
+      const ticketStatusOfEV = []
+      const coppyTicketList = [...state.ticketList]
+      const getFilterTicketList = (maGoi: string) => {
+        return coppyTicketList.filter((ticket) => {
+          return ticket.ngayApDung.getMonth() === month && ticket.maGoi === maGoi
+        })
+      }
+
+      const usedTicketFA = getFilterTicketList('goiGiaDinh').reduce((total: number, ele: TicketList) => {
+        if (ele.tinhTrangSuDung === DA_SU_DUNG) {
+          total = total + 1
+        }
+        return total
+      }, 0)
+
+      const unusedTicketFA = getFilterTicketList('goiGiaDinh').reduce((total: number, ele: TicketList) => {
+        if (ele.tinhTrangSuDung === CHUA_SU_DUNG) {
+          total = total + 1
+        }
+        return total
+      }, 0)
+      const usedTicketEV = getFilterTicketList('goiSuKien').reduce((total: number, ele: TicketList) => {
+        if (ele.tinhTrangSuDung === DA_SU_DUNG) {
+          total = total + 1
+        }
+        return total
+      }, 0)
+
+      const unusedTicketEV = getFilterTicketList('goiSuKien').reduce((total: number, ele: TicketList) => {
+        if (ele.tinhTrangSuDung === CHUA_SU_DUNG) {
+          total = total + 1
+        }
+        return total
+      }, 0)
+      const totalFA =  usedTicketFA + unusedTicketFA
+      const totalEV = usedTicketEV + unusedTicketEV
+      ticketStatusOfFA.push(usedTicketFA / totalFA * 100, unusedTicketFA / totalFA * 100)
+      ticketStatusOfEV.push(usedTicketEV / totalEV * 100, unusedTicketEV / totalEV * 100)
+      state.usedTicketFA = usedTicketFA
+      state.unusedTicketFA = unusedTicketFA
+      state.usedTicketEV = usedTicketEV
+      state.unusedTicketEV = unusedTicketEV
+    
+      return { ...state, ticketStatusOfFA: [...ticketStatusOfFA], ticketStatusOfEV: [...ticketStatusOfEV]}
     }
     default:
       return { ...state };

@@ -87,14 +87,14 @@ export default function AddTicketPack() {
                         <div className='mr-5'>
                             <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Ngày áp dụng</p>
                             <div className='flex items-center'>
-                                <DatePicker onChange={handleOnChangeDatePicker} name='ngayApDung' ></DatePicker>
+                                <DatePicker format='DD/MM/YYYY' onChange={handleOnChangeDatePicker} name='ngayApDung' ></DatePicker>
                                 <TimePicker placeholder='hh:mm:ss' style={{ marginLeft: '12px', height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayApDung', formik.values.ngayApDung?.toDate())}></TimePicker>
                             </div>
                         </div>
                         <div>
                             <p className='mb-2 font-semibold text-base opacity-70' style={{ color: ' #1E0D03' }}>Ngày hết hạn</p>
                             <div className='flex items-center'>
-                                <DatePicker onChange={handleOnChangeDatePicker} name='ngayHetHan' ></DatePicker>
+                                <DatePicker format='DD/MM/YYYY' onChange={handleOnChangeDatePicker} name='ngayHetHan' ></DatePicker>
                                 <TimePicker placeholder='hh:mm:ss' style={{ marginLeft: '12px', height: '40px', borderRadius: '8px' }} onChange={handleOnChangeTimePicker('ngayHetHan', formik.values.ngayHetHan?.toDate())}></TimePicker>
                             </div>
 

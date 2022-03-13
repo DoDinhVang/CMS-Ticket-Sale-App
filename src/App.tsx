@@ -10,23 +10,18 @@ import history from './util/history'
 import ModalFilterTicket from './component/modal/ModalFilterTicket'
 import Loading from './component/loading/Loading'
 import UpdateTicketPack from './pages/caidat/components/UpdateTicketPack'
-import '../src/sass/Base/customize.scss'
-import '../src/sass/Componens/button.scss'
-import '../src/sass/Layouts/quanLyVe.scss'
-import '../src/sass/Componens/inputSearch.scss'
-import '../src/sass/Layouts/homeTemplate.scss'
-import '../src/sass/Componens/calendar.scss'
 import AddTicketPack from './pages/caidat/components/AddTicketPack';
-import Calendar2 from './component/Calendar2';
-import DatePicker from './component/DatePicker';
+import '../src/sass/Base/customize.scss'
+import '../src/sass/Layouts/quanLyVe.scss'
+import '../src/sass/Layouts/homeTemplate.scss'
+import '../src/sass/Components/calendar.scss'
+import '../src/sass/Components/datepicker.scss'
+import '../src/sass/Components/inputSearch.scss'
+import '../src/sass/Components/button.scss'
+import '../src/sass/Components/donutChart.scss'
 
 
 function App() {
-
-  const handleChange = (value:any)=>{
-   
-    console.log('value input', value)
-  }
 
   return (
     <Router history={history}>
@@ -34,10 +29,6 @@ function App() {
       <ModalFilterTicket />
       <UpdateTicketPack />
       <AddTicketPack />
-      {/* <DatePicker onChange = {handleChange} />
-      <DatePicker onChange = {handleChange} /> */}
-
-      {/* <Calendar/> */}
       <Switch>
         <HomeTemPlate padding='24px' background='white' title='Thống kê' exact path='/' Component={TrangChu}></HomeTemPlate>
         <HomeTemPlate padding='24px' background='white' title='Thống kê' exact path='/trangchu' Component={TrangChu}></HomeTemPlate>

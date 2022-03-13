@@ -15,6 +15,7 @@ import { downloadCSV } from '../../util/settings';
 export default function QuanLyVe() {
 
     const { ticketList } = useSelector((state: State) => state.quanLyVeReducer);
+    console.log('tickerlist', ticketList)
     const dispatch = useDispatch();
     const [style, setStyle] = useState({
         goiGiaDinh: 'loaigoi_active',
@@ -117,7 +118,7 @@ export default function QuanLyVe() {
       }) 
     return (
         <div id='quanLyVe'>
-            <h1 className='font-black text-4xl mb-6' style={{ lineHeight: "54px", color: "#1E0D03" }}>Quản lý vé</h1>
+            <h1 className='font-black text-3xl mb-6' style={{ lineHeight: "54px", color: "#1E0D03" }}>Quản lý vé</h1>
             {/* div:  loại gói  */}
             <div className='flex loaigoi'>
                 <p onClick={() => {
@@ -151,7 +152,7 @@ export default function QuanLyVe() {
                         <span style={{ marginLeft: '12px' }}>Lọc vé</span>
                     </button>
                     <button className='button--white' onClick={()=>{
-                        downloadCSV(csvContent)
+                        downloadCSV(csvContent,'DanhSachVe')
                     }}>
                         <span>Xuất file (.csv)</span>
                     </button>

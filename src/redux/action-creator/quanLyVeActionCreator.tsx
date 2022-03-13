@@ -22,7 +22,7 @@ export const getTicketListActionCreator = () => {
 
             }
         } catch (error) {
-            console.log('error', error)
+           console.log('error', error)
         }
         dispatch(hideLoadingActionCreator())
 
@@ -77,5 +77,15 @@ export const filterTickerActionCreator = (values: any) => {
         })
         await dispatch(hideLoadingActionCreator())
         await dispatch(modalVisibleActionCreator(false))
+    }
+}
+export const  geTicketStatusActionCreator = (month:number)=>{
+    console.log('dis',month)
+    return  async (dispatch: Dispatch<any>)=>{
+        await dispatch(getTicketListActionCreator())
+        dispatch({
+            type: TicketManagerType.SET_TICKET_STATUS,
+            payload:month
+        })
     }
 }

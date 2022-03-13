@@ -7,18 +7,18 @@ interface GetRevenue{
 }
 interface GetRevenueByMonth{
     type: DashboardType.GET_REVENUE_BY_MONTH,
-    payload:{
-        values: any,
-        month:number,
-        year:number
-    }
+    payload:Date
 }
 
 interface GetRevenueByWeek {
     type: DashboardType.GET_REVENUE_BY_WEEK,
+    payload: Date []
+}
+interface GetTicketSold{
+    type: DashboardType.GET_TICKET_SOLD,
     payload: {
-        startOfWeek: string,
-        endOfWeek: string
+        daSuDung: number,
+        chuaSuDung:number
     }
 }
-export type DashboardAction = GetRevenue | GetRevenueByMonth | GetRevenueByWeek
+export type DashboardAction = GetRevenue | GetRevenueByMonth | GetRevenueByWeek | GetTicketSold

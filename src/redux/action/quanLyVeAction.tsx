@@ -14,6 +14,10 @@ interface FilterTicketAction{
     type: TicketManagerType,
     payload: FilterTicket
 }
+interface TicketStatusAction{
+    type: TicketManagerType.SET_TICKET_STATUS,
+    payload: number
+}
 
 
-export type TicketManagerAction = GetTicketListAction | GetCheckInGateListAction | FilterTicketAction 
+export type TicketManagerAction = GetTicketListAction | GetCheckInGateListAction | FilterTicketAction |TicketStatusAction

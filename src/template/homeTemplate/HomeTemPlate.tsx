@@ -42,28 +42,28 @@ export default function HomeTemPlate(props: homTemplateProps) {
                             <img style={{ height: '58px', width: '133px' }} src={require('../../assets/img/insight-logo.png')} alt='insight-logo_img'></img>
                         </div>
                         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                            <Menu.Item key="1" icon={<HomeOutlined/>} onClick={() => {
+                            <Menu.Item style ={{fontSize: '16px'}} key="1" icon={<HomeOutlined style ={{fontSize: '16px'}}/>} onClick={() => {
                                 history.push('/trangchu')
                             }}>
                                 Trang chủ
                             </Menu.Item>
-                            <Menu.Item key="2" onClick={() => {
+                            <Menu.Item style={{fontSize: '16px'}} key="2" onClick={() => {
                                 history.push('/quanlyve')
-                            }} icon={<i className="fa fa-ticket-alt"></i>}>
+                            }} icon={<i className="fa fa-ticket-alt" style={{fontSize: '16px'}}></i>}>
                                 Quản lý vé
                             </Menu.Item>
                             
-                            <Menu.Item key="3" onClick={() => {
+                            <Menu.Item style={{fontSize: '16px'}} key="3" onClick={() => {
                                 history.push('/doisoatve')
-                            }} icon={<i className="fa fa-money-check-alt"></i>}>
+                            }} icon={<i className="fa fa-money-check-alt" style={{fontSize: '18px'}}></i>}>
                                 Đối soát vé
                             </Menu.Item>
-                            <Menu.Item key="4" onClick={() => {
+                            <Menu.Item style={{fontSize: '16px'}} key="4" onClick={() => {
                                 history.push('/caiDat')
-                            }} icon={<SettingOutlined />}>
+                            }} icon={<SettingOutlined style={{fontSize: '16px'}} />}>
                                 Cài đặt
                             </Menu.Item>
-                            <Menu.Item style={{ marginLeft: '20px' }} key="5" onClick={() => {
+                            <Menu.Item style={{ marginLeft: '20px',fontSize: '16px' }} key="5" onClick={() => {
                                 history.push('/caiDat')
                             }}>
                                 Gói dịch vụ

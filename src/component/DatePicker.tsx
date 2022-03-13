@@ -2,27 +2,39 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Input } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
 import Calendar2 from './Calendar2'
-import '../sass/Componens/datepicker2.scss'
 import moment from 'moment'
+
 interface propsDatePicker {
     visibleProps?: boolean,
     name?: string,
     onChange?: any,
-    defaultValue?: Date
+    defaultValue?: Date,
+    format: string,
+    size?: string,
+    picker?: string
 
 }
 
 export default function DatePicker(props: propsDatePicker) {
-    const { visibleProps, name, onChange, defaultValue } = props;
+    const { visibleProps, name, onChange, defaultValue, format, size } = props;
     const [visible, setVisible] = useState(visibleProps || false)
-    const [value, setValue] = useState<any>();
+    const [value, setValue] = useState<any>()
+    const [options, setOptions] = useState([])
+  
 
     const ref = useRef<any>(null)
     useEffect(() => {
-        if (value !== undefined) {
+        if (value !== undefined && name !== undefined) {
             onChange(value, name)
         }
+
     }, [value])
+    useEffect(() => {
+        if(name === undefined &&  value !== undefined)
+        onChange(value, options)
+    }, [options])
+
+
 
     useEffect(() => {
         const checkIfClickedOutside = (e: any) => {
@@ -40,33 +52,20 @@ export default function DatePicker(props: propsDatePicker) {
     }, [visible])
 
     return (
-        <div ref={ref} className='datepicker' >
+        <div ref={ref} className= {`datepicker-${size}`} >
             <div className='date-picker-control'>
-                {defaultValue !== undefined ?
-                    <> <Input value={moment(defaultValue).format('DD/MM/YYYY')}
-                        onChange={(e) => {
+                <Input value={value !== undefined ? moment(value).format(format) : defaultValue !== undefined ? moment(defaultValue).format(format) : ''}
+                    onChange={(e) => {
 
-                        }}
-                        onFocus={() => { setVisible(true) }} className='input-base'
-                    />
-                        <CalendarOutlined className='icon-calendar cursor-pointer' onClick={() => {
-                            setVisible((oldSate: boolean) => !oldSate)
-                        }} /></> : <>
-                        <Input value={value === undefined ? '' : moment(value).format('DD/MM/YYYY')}
-                            onChange={(e) => {
-
-                            }}
-                            onFocus={() => { setVisible(true) }} className='input-base'
-                        />
-                        <CalendarOutlined className='icon-calendar cursor-pointer' onClick={() => {
-                            setVisible((oldSate: boolean) => !oldSate)
-                        }} />
-                    </>
-
-                }
+                    }}
+                    onFocus={() => { setVisible(true) }} className={`input-${size}`}
+                />
+                <CalendarOutlined className='icon-calendar cursor-pointer' onClick={() => {
+                    setVisible((oldSate: boolean) => !oldSate)
+                }} />
 
             </div>
-            <Calendar2 setValueProps={setValue} visibleProps={visible} />
+            <Calendar2 setOptionProps={setOptions} setValueProps={setValue} visibleProps={visible} />
         </div>
     )
 }

@@ -12,7 +12,7 @@ const getDay = (date: Date) => {
 }
 let count = 0;
 export default function Calendar2(props: any) {
-    const { setValueProps, visibleProps } = props
+    const { setValueProps, visibleProps, setOptionProps } = props
 
     const DAYS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
     const today = new Date();
@@ -25,14 +25,20 @@ export default function Calendar2(props: any) {
     const lastDayInMonth = getDay(new Date(year, month + 1, 0))
     const daysInMonth = new Date(year, month + 1, 0).getDate()
     const daysInPrevMonth = new Date(year, month, 0).getDate()
-    console.log('daysInPrevMonth', daysInPrevMonth)
+
+    const dates: any = []
 
     const handleOnChange = (e: RadioChangeEvent) => {
         const { value } = e.target;
         setRadioValue(value)
     }
     const ref = useRef<any>(null);
-
+    useEffect(() => {
+        setOptionProps(dates)
+    }, [date])
+    useEffect(() => {
+        setOptionProps(dates)
+    }, [radioValue == 2])
 
     return (
 
@@ -40,9 +46,14 @@ export default function Calendar2(props: any) {
             <div className='header flex items-center'>
                 <LeftOutlined onClick={() => {
                     setDate(new Date(year, month - 1, date.getDate()))
+                    setValueProps(new Date(year, month - 1, date.getDate()))
                 }} />
                 <p className='mb-0 px-2'>{`Tháng ${month + 1}, ${year}`}</p>
-                <RightOutlined onClick={() => { setDate(new Date(year, month + 1, date.getDate())) }} />
+                <RightOutlined onClick={() => {
+                    setDate(new Date(year, month + 1, date.getDate()))
+                    setValueProps(new Date(year, month + 1, date.getDate()))
+                }
+                } />
             </div>
             <Radio.Group className='radio-group' onChange={handleOnChange} value={radioValue}>
                 <Radio value={1}>Theo tháng</Radio>
@@ -69,6 +80,7 @@ export default function Calendar2(props: any) {
                 {/* render ngày trong tháng hiện tại*/}
                 {Array(daysInMonth).fill(0).map((_, index) => {
                     let style = '';
+
                     if (radioValue === 2) {
 
                         let range = index
@@ -78,44 +90,43 @@ export default function Calendar2(props: any) {
                         // date.getDate() bắt đầu từ  0 -> ... => row = date.getDate() + startDayInMonth - 2) / 7 (voi 7 tương ứng với 7 phần tử trên 1 row)
                         const row: number = Math.floor((date.getDate() + startDayInMonth - 2) / 7)
                         const rowIndex = Math.floor((range + startDayInMonth - 1) / 7)
-                        // if (Math.floor( row )=== Math.floor(rowIndex) ){
-                        //     count ++;
-                        //     if(count === 1){
-                        //         style = 'day-cell-center day-cell-first'
-                        //     }else if(index === row * 7 + startDayInMonth - 2){
-                        //         style = 'day-cell-last'
-                        //     }
-                        //     else{
-                        //         style = 'day-cell-center'
-                        //     }
 
-
-                        // }
                         if (row === rowIndex) {
                             if (index === 0) { // row === 0
                                 style = 'day-cell-first'
+                                dates.push(new Date(year, month, index + 1))
+
                             } else if (index === row * 7 - (startDayInMonth - 1)) {
                                 style = ' day-cell-first'
+                                dates.push(new Date(year, month, index + 1))
                             } else if (index === (row * 7 + 7 - startDayInMonth)) {
                                 style = 'day-cell-last'
+                                dates.push(new Date(year, month, index + 1))
+
                             } else if (row === 4) {
                                 console.log('row === ', index)
                                 if (index === (row * 7 + 7 - startDayInMonth - (6 - lastDayInMonth) - 1)) {
                                     style = 'day-cell-last'
+                                    dates.push(new Date(year, month, index + 1))
+
                                 } else {
                                     style = 'day-cell-center'
+                                    dates.push(new Date(year, month, index + 1))
+
                                 }
                             } else {
                                 style = 'day-cell-center'
+                                dates.push(new Date(year, month, index + 1))
+
                             }
                         }
                     }
 
-
-
                     return <div onClick={() => {
                         setDate(new Date(year, month, index + 1))
                         setValueProps(new Date(year, month, index + 1))
+
+
                     }} key={index} className={`day-cell day-cell-in-month ${style}
                         ${index + 1 === today.getDate() &&
                             month === today.getMonth() &&

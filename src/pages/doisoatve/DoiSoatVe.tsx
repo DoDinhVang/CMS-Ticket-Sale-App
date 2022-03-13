@@ -17,6 +17,7 @@ import DatePicker from '../../component/DatePicker';
 export default function DoiSoatVe() {
 
     const { ticketList } = useSelector((state: State) => state.quanLyVeReducer)
+    console.log('tickerlist', ticketList)
     const { eventList } = useSelector((state: State) => state.checkTicketReducer)
     const [visibleButton, setVisibleButton] = useState(false)
     const dispatch = useDispatch()
@@ -131,11 +132,11 @@ export default function DoiSoatVe() {
         <div className='flex'>
             <div className='mr-5 bg-white p-6 rounded-3xl w-full'>
                 {/* input search */}
-                <h1 className='font-black text-4xl mb-6' style={{ lineHeight: "54px", color: "#1E0D03" }}>Đối soát vé</h1>
+                <h1 className='font-black text-3xl mb-6' style={{ lineHeight: "54px", color: "#1E0D03" }}>Đối soát vé</h1>
                 <div className='flex justify-between items-center'>
                     <InputSearch size='small' placeholder='Tìm bằng số vé'></InputSearch>
                     {visibleButton ? <button onClick={() => {
-                        downloadCSV(csvContent)
+                        downloadCSV(csvContent,'DoiSoatVe')
                     }} className='button--white'>Xuất file(.csv)</button> : <button className='button--orange'>Chốt đối soát</button>}
                 </div>
                 <Table className='mt-6 ' columns={columns} dataSource={data} pagination={{ position: ['bottomCenter'] }} />
@@ -163,12 +164,12 @@ export default function DoiSoatVe() {
                     </div>
                     <div className='flex justify-between items-center mb-6'>
                         <p className='mb-0 font-semibold text-base'>từ ngày</p>
-                        <DatePicker name='startTime' onChange={handleOnChange}></DatePicker>
+                        <DatePicker format='DD/MM/YYYY' name='startTime' onChange={handleOnChange}></DatePicker>
 
                     </div>
                     <div className='flex justify-between items-center mb-6'>
                         <p className='mb-0 font-semibold text-base'>đến ngày</p>
-                        <DatePicker name='endTime' onChange={handleOnChange}></DatePicker>
+                        <DatePicker format='DD/MM/YYYY' name='endTime' onChange={handleOnChange}></DatePicker>
                     </div>
                     <div className='text-center'>
                         <button type='submit' className='button--white w-40 h-12'>Lọc</button>

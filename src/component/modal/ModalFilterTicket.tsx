@@ -81,11 +81,11 @@ export default function ModalFilterTicket() {
           <div className='flex items-center'>
             <div style={{ marginRight: '130px' }}>
               <p className='text-title'>Từ ngày</p>
-              <DatePicker name = 'startTime' onChange = {handleOnChange}></DatePicker>
+              <DatePicker format='DD/MM/YYYY' name = 'startTime' onChange = {handleOnChange}></DatePicker>
             </div>
             <div >
               <p className='text-title'>Đến ngày</p>
-              <DatePicker name='endTime' onChange={handleOnChange}></DatePicker>
+              <DatePicker format='DD/MM/YYYY' name='endTime' onChange={handleOnChange}></DatePicker>
             </div>
           </div>
           {/* radio input */}

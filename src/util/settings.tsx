@@ -13,13 +13,13 @@ export const createCSV = (array: any[]) => {
 
     return result;
 }
-export const downloadCSV = (array: any) => {
+export const downloadCSV = (array: any, fileName: string) => {
     console.log(createCSV(array))
     let csv = 'data:text/csv;charset=utf-18,\uFEFF' + createCSV(array);
     let excel = encodeURI(csv);
 
     let link = document.createElement('a');
     link.setAttribute('href', excel);
-    link.setAttribute('download', 'test.csv');
+    link.setAttribute('download', `${fileName}.csv`);
     link.click();
 }

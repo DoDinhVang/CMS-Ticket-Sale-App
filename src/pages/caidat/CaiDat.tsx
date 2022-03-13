@@ -44,7 +44,7 @@ export default function CaiDat() {
       dataIndex: 'ngayApDung',
       key: 'ngayApDung',
       render: (text: any) => {
-       
+
         return <span>{moment(text.toDate()).format('DD/MM/YYYY')}</span>
       }
     },
@@ -69,7 +69,7 @@ export default function CaiDat() {
       dataIndex: 'giaCombo',
       key: 'giaCombo',
       render: (text: TicketPack['giaCombo']) => {
-      
+
         return <>
           {text?.giaVe ? <span>{`${text.giaVe}/ ${text.soVe}`}</span> : <span></span>}
         </>
@@ -91,7 +91,7 @@ export default function CaiDat() {
       title: '',
       key: 'capNhat',
       render: (record: any) => {
-        
+
         return <div onClick={() => {
           dispatch(editModalVisibleActionCreator(true))
           dispatch(getInfoTicketPackActionCreator({ ...record }))
@@ -114,20 +114,20 @@ export default function CaiDat() {
   })
   return (
     <div id='caiDat'>
-
+      <h1 className='font-black text-3xl mb-6' style={{ lineHeight: "54px", color: "#1E0D03" }}>Danh Sách Gói Vé</h1>
       <div className='flex justify-between items-center'>
         {/* input search  */}
-        <InputSearch size ='base' placeholder='Tìm bằng số vé'></InputSearch>
+        <InputSearch size='base' placeholder='Tìm bằng số vé'></InputSearch>
 
 
         {/* filter ticket  and export file  */}
         <div className='flex justify-between items-center'>
           <button onClick={() => {
-            downloadCSV(csvContent)
+            downloadCSV(csvContent, 'DanhSachGoiVe')
           }} className='button--white mr-3'>
             Xuất file (.csv)
           </button>
-          <button className='button--orange' onClick={()=>{
+          <button className='button--orange' onClick={() => {
             dispatch(addModalVisibleActionCreator(true))
           }}>Thêm gói vé</button>
         </div>
